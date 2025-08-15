@@ -23,17 +23,23 @@ const HourlyForecast = ({ location, recordId }) => {
           // Use existing record ID
           response = await fetch(`http://localhost:5000/api/hourly/${recordId}?date=${selectedDate}`);
         } else {
-          // Create new request
-          response = await fetch('http://localhost:5000/api/hourly', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              location: location,
-              date: selectedDate
-            })
-          });
+          // Use direct API for better performance
+          // First get coordinates for the location
+          const geocodeResponse = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(location)}&limit=1&appid=${process.env.REACT_APP_WEATHER_API_KEY}`);
+          
+          if (!geocodeResponse.ok) {
+            throw new Error('Failed to get location coordinates');
+          }
+          
+          const geocodeData = await geocodeResponse.json();
+          if (!geocodeData || geocodeData.length === 0) {
+            throw new Error('Location not found');
+          }
+          
+          const { lat, lon } = geocodeData[0];
+          
+          // Get hourly forecast using coordinates
+          response = await fetch(`http://localhost:5000/api/hourly/direct?lat=${lat}&lon=${lon}`);
         }
 
         console.log('Hourly forecast response status:', response.status);
@@ -46,7 +52,18 @@ const HourlyForecast = ({ location, recordId }) => {
 
         const data = await response.json();
         console.log('Hourly forecast data:', data);
-        setHourlyData(data);
+        
+        // Handle both old and new API response formats
+        if (data.hourly_forecast) {
+          setHourlyData(data);
+        } else {
+          // New API format
+          setHourlyData({
+            location: location,
+            date: selectedDate,
+            hourly_forecast: data
+          });
+        }
       } catch (err) {
         console.error('Error fetching hourly forecast:', err);
         setError(`Unable to load hourly forecast: ${err.message}`);
