@@ -1,0 +1,371 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  color: rgba(15, 23, 42, 0.9);
+  position: relative;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(180deg, rgba(147, 197, 253, 0.1) 0%, rgba(186, 230, 253, 0.05) 100%); /* very light top-to-bottom gradient */
+}
+
+/* Background Video */
+.App {
+  min-height: 100vh;
+  padding: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+  min-width: 100%;
+  min-height: 100%;
+  opacity: 0.8;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  padding: 0 24px;
+}
+
+.app-header {
+  text-align: center;
+  padding: 48px 24px;
+  margin-bottom: 16px;
+}
+
+.header-content {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-main {
+  text-align: center;
+}
+
+.mobile-location-button {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.pm-accelerator-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 24px;
+}
+
+.pm-accelerator-left {
+  display: flex;
+  align-items: center;
+}
+
+.pm-accelerator-right {
+  display: flex;
+  align-items: center;
+}
+
+.pm-accelerator-link {
+  background: transparent;
+  color: #000000;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5px);
+}
+
+.pm-accelerator-link:hover {
+  background: rgba(255, 255, 255, 0.9);
+  color: #000000;
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.pm-accelerator-link:active {
+  transform: translateY(0);
+}
+
+.mobile-location-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.mobile-location-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 1);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.mobile-location-btn:active {
+  transform: scale(0.95);
+}
+
+.app-header h1 {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  margin-bottom: 16px;
+  font-weight: 700;
+  color: rgba(15, 23, 42, 0.95);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.app-header p {
+  font-size: clamp(1.125rem, 2.5vw, 1.375rem);
+  color: rgba(15, 23, 42, 0.7);
+  font-weight: 400;
+  line-height: 1.5;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.search-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+
+
+
+
+.welcome-message {
+  padding: clamp(48px, 8vw, 72px) 24px;
+  text-align: center;
+  color: rgba(15, 23, 42, 0.9);
+}
+
+.welcome-message h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 24px;
+  color: rgba(15, 23, 42, 0.95);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.welcome-message p {
+  font-size: clamp(1.125rem, 2.5vw, 1.25rem);
+  margin-bottom: 32px;
+  line-height: 1.6;
+  color: rgba(15, 23, 42, 0.7);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.App.clear {
+  background: linear-gradient(180deg, rgba(147, 197, 253, 0.15) 0%, rgba(186, 230, 253, 0.08) 100%);
+}
+
+.App.clouds {
+background: linear-gradient(180deg, rgba(148, 163, 184, 0.12) 0%, rgba(203, 213, 225, 0.06) 100%); /* blue-gray */
+}
+
+.App.rain {
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.12) 0%, rgba(147, 197, 253, 0.06) 100%); /* cool blue */
+}
+
+.App.snow {
+  background: linear-gradient(180deg, rgba(186, 230, 253, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%); /* near-white */
+}
+
+.App.night {
+  background: linear-gradient(180deg, rgba(30, 58, 138, 0.15) 0%, rgba(51, 65, 85, 0.08) 100%); /* deep navy */
+}
+
+/* Mobile */
+@media (max-width: 1024px) {
+  .container {
+    padding: 0 16px;
+  }
+  
+  .app-header {
+    padding: 32px 16px;
+  }
+  
+  .search-section {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .App {
+    padding: 16px;
+  }
+  
+  .container {
+    padding: 0 16px;
+  }
+  
+  .app-header {
+    padding: 24px 16px;
+    margin-bottom: 12px;
+  }
+  
+  .mobile-location-button {
+    display: block;
+  }
+  
+  .mobile-location-btn {
+    display: flex;
+  }
+  
+  .pm-accelerator-section {
+    margin-bottom: 16px;
+    padding: 0 16px;
+  }
+  
+  .pm-accelerator-link {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  
+  .search-section {
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    gap: 16px;
+  }
+  
+
+  
+  .weather-content {
+    padding: 16px;
+  }
+  
+  .welcome-message {
+    padding: 32px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .App {
+    padding: 8px;
+  }
+  
+  .container {
+    padding: 0 8px;
+  }
+  
+  .app-header {
+    padding: 16px 8px;
+  }
+  
+  .search-section {
+    padding: 8px;
+  }
+  
+  .weather-content {
+    padding: 8px;
+  }
+  
+  .welcome-message {
+    padding: 24px 8px;
+  }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+  .app-header {
+    padding: 16px 24px;
+    margin-bottom: 16px;
+  }
+  
+  .app-header h1 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    margin-bottom: 8px;
+  }
+  
+  .welcome-message {
+    padding: 24px;
+  }
+  
+  .welcome-message h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: 12px;
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .app-header h1,
+  .app-header p,
+  .welcome-message h2,
+  .welcome-message p {
+    font-weight: 500;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .search-section {
+    gap: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .App,
+  .container,
+  .app-header,
+  .search-section,
+  .weather-content,
+  .welcome-message {
+    animation: none;
+    transition: none;
+  }
+}
+
+@media (prefers-contrast: high) {
+  body {
+    color: rgba(15, 23, 42, 1);
+  }
+  
+  .app-header h1,
+  .app-header p,
+  .welcome-message h2,
+  .welcome-message p {
+    color: rgba(15, 23, 42, 1);
+  }
+}
