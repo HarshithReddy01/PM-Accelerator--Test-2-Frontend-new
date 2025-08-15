@@ -427,6 +427,33 @@
   font-size: 0.8rem;
   text-transform: capitalize;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  margin-bottom: 8px;
+}
+
+.hourly-details {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 0.7rem;
+}
+
+.detail-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.detail-value {
+  color: #ffffff;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .hourly-no-data {
@@ -466,6 +493,16 @@
   .hourly-description {
     font-size: 0.7rem;
   }
+  
+  .hourly-details {
+    margin-top: 6px;
+    padding-top: 6px;
+  }
+  
+  .detail-item {
+    font-size: 0.6rem;
+    margin-bottom: 3px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -496,6 +533,16 @@
   
   .hourly-description {
     font-size: 0.6rem;
+  }
+  
+  .hourly-details {
+    margin-top: 5px;
+    padding-top: 5px;
+  }
+  
+  .detail-item {
+    font-size: 0.5rem;
+    margin-bottom: 2px;
   }
 }
 
