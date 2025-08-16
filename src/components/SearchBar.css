@@ -52,7 +52,6 @@
   box-shadow: 
     0 4px 16px rgba(0, 0, 0, 0.08),
     0 2px 8px rgba(0, 0, 0, 0.04);
-  transform: translateY(-1px); 
 }
 
 .search-input-container.invalid {
@@ -94,7 +93,7 @@
   border-radius: 16px;
   font-size: 16px;
   font-weight: 500; 
-  color: rgba(15, 23, 42, 0.9); 
+  color: #000000;
   outline: none;
   z-index: 1;
   position: relative;
@@ -132,11 +131,10 @@
 .clear-button:hover {
   background: rgba(15, 23, 42, 0.1);
   color: rgba(15, 23, 42, 0.8);
-  transform: scale(1.05);
 }
 
 .clear-button:active {
-  transform: scale(0.95);
+  background: rgba(15, 23, 42, 0.15);
 }
 
 .clear-button svg {
@@ -166,11 +164,10 @@
 .location-button:hover {
   background: rgba(15, 23, 42, 0.1);
   color: rgba(15, 23, 42, 0.9);
-  transform: scale(1.05);
 }
 
 .location-button:active {
-  transform: scale(0.95);
+  background: rgba(15, 23, 42, 0.15);
 }
 
 .location-button.loading {
@@ -251,11 +248,9 @@
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -370,8 +365,8 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .search-input:focus {

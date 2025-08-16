@@ -4,6 +4,7 @@
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin: 20px 0;
+  color: #000000;
 }
 
 .hourly-header {
@@ -17,7 +18,7 @@
 
 .hourly-header h3 {
   margin: 0;
-  color: #2c3e50;
+  color: #000000;
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -30,7 +31,7 @@
 
 .date-selector label {
   font-weight: 500;
-  color: #555;
+  color: #000000;
 }
 
 .date-selector input {
@@ -57,7 +58,7 @@
 
 .hourly-info p {
   margin: 5px 0;
-  color: #555;
+  color: #000000;
   font-size: 14px;
 }
 
@@ -92,7 +93,6 @@
 }
 
 .hourly-item:hover {
-  transform: translateY(-5px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 

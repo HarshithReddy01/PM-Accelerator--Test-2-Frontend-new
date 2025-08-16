@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { MdLocationOn, MdDelete, MdEdit, MdWarning, MdClear, MdDescription, MdAssessment, MdCode, MdPictureAsPdf, MdCreate, MdDateRange, MdPublic, MdAccessTime, MdUpdate } from 'react-icons/md';
+import { MdLocationOn, MdDelete, MdEdit, MdWarning, MdClear, MdDescription, MdAssessment, MdCode, MdCreate, MdDateRange, MdPublic, MdAccessTime, MdUpdate, MdArrowBack } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 import './WeatherHistory.css';
 
 const WeatherHistory = () => {
+  const navigate = useNavigate();
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
   const [editingRecord, setEditingRecord] = useState(null);
   const [editForm, setEditForm] = useState({
     location: '',
@@ -93,9 +96,18 @@ const WeatherHistory = () => {
 
   const exportData = async (format) => {
     try {
+      setError(null);
+      console.log(`Attempting to export ${format}...`);
       const response = await fetch(`http://localhost:5000/api/export/${format}`);
+      
+      console.log(`Response status: ${response.status}`);
+      console.log(`Response headers:`, response.headers);
+      
       if (response.ok) {
         const blob = await response.blob();
+        console.log(`Blob size: ${blob.size} bytes`);
+        console.log(`Blob type: ${blob.type}`);
+        
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -104,11 +116,15 @@ const WeatherHistory = () => {
         a.click();
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
+        console.log(`${format} export completed successfully`);
       } else {
-        setError(`Failed to export ${format}`);
+        const errorData = await response.json();
+        console.error(`Export failed:`, errorData);
+        setError(`Failed to export ${format}: ${errorData.error || 'Unknown error'}`);
       }
     } catch (err) {
-      setError(`Error exporting ${format}`);
+      console.error('Export error:', err);
+      setError(`Error exporting ${format}: ${err.message}`);
     }
   };
 
@@ -123,11 +139,12 @@ const WeatherHistory = () => {
         method: 'DELETE'
       });
       
-      if (response.ok) {
-        setRecords([]);
-        setError(null);
-        alert('All weather records have been deleted successfully!');
-      } else {
+             if (response.ok) {
+         setRecords([]);
+         setError(null);
+         setSuccessMessage('All weather records have been deleted successfully!');
+         setTimeout(() => setSuccessMessage(null), 3000);
+       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Failed to clear history');
       }
@@ -148,31 +165,30 @@ const WeatherHistory = () => {
 
   return (
     <div className="weather-history">
+      <div className="back-button-container">
+        <button onClick={() => navigate('/')} className="back-to-forecast-btn">
+          <MdArrowBack /> Back to Weather Forecast
+        </button>
+      </div>
+      
       <div className="history-header">
         <h2>Weather History</h2>
         <p>View and manage your saved weather records</p>
         
-        <div className="export-buttons">
-          <h4>Export Data:</h4>
-          <button onClick={() => exportData('json')} className="export-btn json">
-            <MdCode /> JSON
-          </button>
-          <button onClick={() => exportData('csv')} className="export-btn csv">
-            <MdAssessment /> CSV
-          </button>
-          <button onClick={() => exportData('xml')} className="export-btn xml">
-            <MdDescription /> XML
-          </button>
-          <button onClick={() => exportData('pdf')} className="export-btn pdf">
-            <MdPictureAsPdf /> PDF
-          </button>
-          <button onClick={() => exportData('markdown')} className="export-btn markdown">
-            <MdCreate /> Markdown
-          </button>
-        </div>
+                 <div className="export-buttons">
+           <h4>Export Data:</h4>
+           <button onClick={() => exportData('json')} className="export-btn json">
+             <MdCode /> JSON
+           </button>
+           <button onClick={() => exportData('xml')} className="export-btn xml">
+             <MdDescription /> XML
+           </button>
+           <button onClick={() => exportData('csv')} className="export-btn csv">
+             <MdAssessment /> CSV (delimited)
+           </button>
+         </div>
         
         <div className="clear-history-section">
-          <h4><MdClear /> Clear History:</h4>
           <button 
             onClick={clearAllHistory} 
             className="clear-history-btn"
@@ -188,12 +204,19 @@ const WeatherHistory = () => {
         </div>
       </div>
 
-      {error && (
-        <div className="error-message">
-          {error}
-          <button onClick={() => setError(null)}>✕</button>
-        </div>
-      )}
+             {error && (
+         <div className="error-message">
+           {error}
+           <button onClick={() => setError(null)}>✕</button>
+         </div>
+       )}
+
+       {successMessage && (
+         <div className="success-message">
+           {successMessage}
+           <button onClick={() => setSuccessMessage(null)}>✕</button>
+         </div>
+       )}
 
       {records.length === 0 ? (
         <div className="no-records">
@@ -209,7 +232,7 @@ const WeatherHistory = () => {
                   {editingRecord === record.id ? (
                     <>
                       <button onClick={() => updateRecord(record.id)} className="save-btn">
-                        💾 Save
+                        Save
                       </button>
                       <button onClick={cancelEdit} className="cancel-btn">
                         Cancel

@@ -57,6 +57,7 @@
   max-width: 1400px;
   margin: 0 auto;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #000000;
 }
 
 .weather-page-header {
@@ -101,18 +102,17 @@
 }
 
 .save-button {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  background: #90EE90;
   color: white;
 }
 
 .history-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #87CEEB;
   color: white;
 }
 
 .save-button:hover,
 .history-button:hover {
-  transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
@@ -185,28 +185,25 @@
 }
 
 .back-button {
-  background: #87CEEB;
+  background: transparent;
   border: none;
   border-radius: 12px;
-  color: white;
+  color: #000000;
   font-size: clamp(0.9rem, 2.2vw, 1.1rem);
   font-weight: 500;
   padding: 12px 20px;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(135, 206, 235, 0.3);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .back-button:hover {
-  background: #7BB8D4;
-  transform: translateY(-1px);
-  box-shadow: 0 3px 12px rgba(135, 206, 235, 0.4);
+  background: rgba(0, 0, 0, 0.1);
 }
 
 .back-button:active {
-  transform: translateY(0);
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .location-button-weather {
@@ -227,12 +224,11 @@
 
 .location-button-weather:hover {
   background: #FFC800;
-  transform: scale(1.02);
   box-shadow: 0 3px 12px rgba(255, 215, 0, 0.4);
 }
 
 .location-button-weather:active {
-  transform: scale(0.95);
+  background: #FFB800;
 }
 
 .weather-navbar {
@@ -265,7 +261,6 @@
 .nav-button:hover {
   background: rgba(0, 0, 0, 0.1);
   border-color: rgba(0, 0, 0, 0.5);
-  transform: translateY(-1px);
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
 }
 
@@ -274,11 +269,10 @@
   border-color: rgba(0, 0, 0, 0.6);
   color: #000000;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
-  transform: translateY(-1px);
 }
 
 .nav-button:active {
-  transform: translateY(0);
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .section-content {
@@ -490,7 +484,6 @@
 
 .hourly-forecast-item:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
@@ -504,7 +497,6 @@
 .hourly-icon {
   font-size: 1.5rem;
   margin-bottom: 5px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .hourly-temp {
@@ -757,11 +749,7 @@
   }
 }
 
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .weather-page-header h1 {
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
-  }
-}
+
 
 @media (prefers-reduced-motion: reduce) {
   .back-button,

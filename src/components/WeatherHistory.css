@@ -1,9 +1,37 @@
-.weather-history {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+ .weather-history {
+   width: 100%;
+   margin: 0;
+   padding: 20px;
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   color: #000000;
+   background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+   min-height: 100vh;
+   box-sizing: border-box;
+ }
+
+.back-button-container {
+  margin-bottom: 20px;
+}
+
+.back-to-forecast-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: #000000;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+ .back-to-forecast-btn:hover {
+   background: rgba(0, 0, 0, 0.1);
+ }
 
 .history-header {
   text-align: center;
@@ -15,28 +43,28 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.history-header h2 {
-  color: #2c3e50;
-  margin-bottom: 10px;
-  font-size: 2.2rem;
-  font-weight: 600;
-}
+ .history-header h2 {
+   color: #000000;
+   margin-bottom: 10px;
+   font-size: 2.2rem;
+   font-weight: 600;
+ }
 
-.history-header p {
-  color: #34495e;
-  font-size: 1.1rem;
-  margin-bottom: 25px;
-}
+ .history-header p {
+   color: #000000;
+   font-size: 1.1rem;
+   margin-bottom: 25px;
+ }
 
 .export-buttons {
   margin-top: 20px;
 }
 
-.export-buttons h4 {
-  color: #2c3e50;
-  margin-bottom: 15px;
-  font-size: 1.2rem;
-}
+ .export-buttons h4 {
+   color: #000000;
+   margin-bottom: 15px;
+   font-size: 1.2rem;
+ }
 
 .export-buttons {
   display: flex;
@@ -61,34 +89,23 @@
 }
 
 .export-btn.json {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-}
-
-.export-btn.csv {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
+  background: linear-gradient(135deg, #90EE90 0%, #98FB98 100%);
+  color: #212529;
 }
 
 .export-btn.xml {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: linear-gradient(135deg, #87CEEB 0%, #B0E0E6 100%);
+  color: #212529;
+}
+
+.export-btn.csv {
+  background: linear-gradient(135deg, #FFA500 0%, #FF8C00 100%);
   color: white;
 }
 
-.export-btn.pdf {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  color: white;
-}
-
-.export-btn.markdown {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-  color: white;
-}
-
-.export-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
+ .export-btn:hover {
+   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+ }
 
 .clear-history-section {
   margin-top: 25px;
@@ -118,18 +135,16 @@
   min-width: 200px;
 }
 
-.clear-history-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
-  background: linear-gradient(135deg, #c0392b, #a93226);
-}
+ .clear-history-btn:hover:not(:disabled) {
+   box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+   background: linear-gradient(135deg, #c0392b, #a93226);
+ }
 
-.clear-history-btn:disabled {
-  background: #bdc3c7;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
+ .clear-history-btn:disabled {
+   background: #bdc3c7;
+   cursor: not-allowed;
+   box-shadow: none;
+ }
 
 .clear-warning {
   text-align: center;
@@ -150,28 +165,53 @@
   padding: 50px;
 }
 
-.error-message {
-  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-  color: white;
-  padding: 15px 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 500;
-}
+ .error-message {
+   background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+   color: white;
+   padding: 15px 20px;
+   border-radius: 10px;
+   margin-bottom: 20px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   font-weight: 500;
+ }
 
-.error-message button {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.2rem;
-  cursor: pointer;
-  padding: 0;
-  width: 20px;
-  height: 20px;
-}
+ .error-message button {
+   background: none;
+   border: none;
+   color: white;
+   font-size: 1.2rem;
+   cursor: pointer;
+   padding: 0;
+   width: 20px;
+   height: 20px;
+ }
+
+ .success-message {
+   background: linear-gradient(135deg, #4CAF50, #45a049);
+   color: white;
+   padding: 15px 20px;
+   border-radius: 10px;
+   margin-bottom: 20px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   font-weight: 500;
+ }
+
+ .success-message button {
+   background: none;
+   border: none;
+   color: white;
+   font-size: 1.2rem;
+   cursor: pointer;
+   padding: 0;
+   width: 20px;
+   height: 20px;
+ }
+
+
 
 .no-records {
   text-align: center;
@@ -202,10 +242,9 @@
   transition: all 0.3s ease;
 }
 
-.record-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
+ .record-card:hover {
+   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+ }
 
 .record-header {
   display: flex;
@@ -239,7 +278,7 @@
 }
 
 .edit-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #87CEEB;
   color: white;
 }
 
@@ -258,10 +297,9 @@
   color: white;
 }
 
-.record-actions button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-}
+ .record-actions button:hover {
+   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+ }
 
 .edit-form {
   margin-top: 15px;

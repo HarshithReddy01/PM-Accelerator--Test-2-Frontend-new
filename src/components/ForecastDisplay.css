@@ -5,8 +5,7 @@
   backdrop-filter: blur(8px);
   padding: 30px;
   border-radius: 20px;
-  color: white;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  color: #000000;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   max-width: 1000px;
   margin: 0 auto;
@@ -22,14 +21,13 @@
   text-align: center;
   margin-bottom: 10px;
   font-weight: 700;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.9);
+  color: #000000;
 }
 
 .forecast-subtitle {
   font-size: clamp(0.9rem, 2.2vw, 1rem);
-  opacity: 0.8;
   margin: 0;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  color: #000000;
 }
 
 .forecast-grid {
@@ -51,7 +49,6 @@
 
 .forecast-day:hover {
   background: rgba(255, 255, 255, 0.08);
-  transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
@@ -63,26 +60,26 @@
   font-size: clamp(1.1rem, 2.8vw, 1.3rem);
   font-weight: 700;
   margin-bottom: 5px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  color: #000000;
 }
 
 .full-date {
   font-size: clamp(0.8rem, 2vw, 0.9rem);
-  opacity: 0.8;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  margin-bottom: 5px;
+  color: #000000;
 }
 
 .forecast-icon {
   font-size: clamp(2.5rem, 6vw, 3.5rem);
   margin-bottom: 15px;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.9);
+  color: #000000;
 }
 
 .forecast-description {
   font-size: clamp(0.9rem, 2.2vw, 1rem);
   margin-bottom: 20px;
   text-transform: capitalize;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  color: #000000;
 }
 
 .forecast-temp-range {
@@ -98,7 +95,6 @@
   font-weight: 600;
   padding: 8px 12px;
   border-radius: 12px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .temp-max {
@@ -121,7 +117,6 @@
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .forecast-details {
@@ -145,13 +140,11 @@
 .detail-label {
   font-size: clamp(0.8rem, 2vw, 0.9rem);
   opacity: 0.8;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .detail-value {
   font-size: clamp(0.9rem, 2.2vw, 1rem);
   font-weight: 600;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .no-forecast-data {
@@ -166,7 +159,6 @@
   font-size: clamp(1rem, 2.5vw, 1.2rem);
   opacity: 0.8;
   margin: 0;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .forecast-note {
@@ -258,11 +250,7 @@
   }
 }
 
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .forecast-display {
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
-  }
-}
+
 @media (prefers-reduced-motion: reduce) {
   .forecast-day {
     transition: none;

@@ -151,8 +151,8 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
   return (
     <div className="save-weather">
       <div className="save-weather-header">
-        <h3>💾 Save Weather Data</h3>
-        <p>Save weather information for future reference</p>
+        <h3> Save Weather Data</h3>
+        <p>Save weather information for future reference and download PDF from history</p>
       </div>
 
       {error && (
@@ -178,7 +178,7 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
               disabled={loading}
               className="quick-save-btn"
             >
-              {loading ? '💾 Saving...' : '💾 Quick Save'}
+              {loading ? 'Saving...' : 'Quick Save'}
             </button>
           </div>
         )}
@@ -231,22 +231,12 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
               </div>
             </div>
 
-            <div className="form-info">
-              <p>💡 The system will:</p>
-              <ul>
-                <li>Validate the location exists</li>
-                <li>Fetch weather data for the specified date range</li>
-                <li>Store all information in the database</li>
-                <li>Allow you to view, edit, or delete later</li>
-              </ul>
-            </div>
-
             <button 
               type="submit" 
               disabled={loading}
               className="save-btn"
             >
-              {loading ? '💾 Saving Weather Data...' : '💾 Save Weather Data'}
+              {loading ? ' Saving Weather Data...' : ' Save Weather Data'}
             </button>
           </form>
         </div>

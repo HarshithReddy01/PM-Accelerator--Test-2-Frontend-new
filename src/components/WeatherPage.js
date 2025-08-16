@@ -324,7 +324,7 @@ function WeatherPage() {
                   </div>
                 )}
                 <p className="hourly-note">
-                  {hourlyData ? hourlyData.note || 'Showing 3-hour interval forecasts for the next 24 hours' : 'Loading hourly forecast data...'}
+                  {hourlyData ? hourlyData.note || 'Showing 3-hour interval forecasts for the next 24 hours' : ''}
                 </p>
                 {console.log('🔍 Debug - hourlyData:', hourlyData)}
                 {console.log('🔍 Debug - forecastData:', forecastData)}
