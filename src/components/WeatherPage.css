@@ -329,7 +329,7 @@
   }
 }
 
-/* Hourly Forecast Section */
+/* Next Hours Forecast Section */
 .hourly-forecast-section {
   margin-top: 30px;
   background: rgba(255, 255, 255, 0.1);
@@ -345,6 +345,52 @@
   font-size: 1.4rem;
   font-weight: 600;
   text-align: center;
+}
+
+/* Today's Summary */
+.today-summary {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.today-summary h4 {
+  color: #000000;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.summary-label {
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.summary-value {
+  color: #000000;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .hourly-note {
@@ -438,6 +484,30 @@
 }
 
 @media (max-width: 768px) {
+  .today-summary {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .today-summary h4 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+  }
+  
+  .summary-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .summary-item {
+    padding: 8px;
+  }
+  
+  .summary-label,
+  .summary-value {
+    font-size: 0.8rem;
+  }
+  
   .hourly-forecast-grid {
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 10px;
@@ -479,6 +549,29 @@
 }
 
 @media (max-width: 480px) {
+  .today-summary {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .today-summary h4 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  
+  .summary-grid {
+    gap: 8px;
+  }
+  
+  .summary-item {
+    padding: 6px;
+  }
+  
+  .summary-label,
+  .summary-value {
+    font-size: 0.7rem;
+  }
+  
   .hourly-forecast-grid {
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     gap: 8px;
