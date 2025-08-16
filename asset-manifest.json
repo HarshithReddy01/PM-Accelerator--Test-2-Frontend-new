@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/PM-Accelerator--Test-1/static/css/main.cd77e334.css",
+    "main.js": "/PM-Accelerator--Test-1/static/js/main.e5848943.js",
+    "index.html": "/PM-Accelerator--Test-1/index.html",
+    "main.cd77e334.css.map": "/PM-Accelerator--Test-1/static/css/main.cd77e334.css.map",
+    "main.e5848943.js.map": "/PM-Accelerator--Test-1/static/js/main.e5848943.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.cd77e334.css",
+    "static/js/main.e5848943.js"
+  ]
+}
