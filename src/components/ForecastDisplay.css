@@ -100,18 +100,19 @@
 .temp-max {
   background: rgba(255, 150, 100, 0.2);
   border: 1px solid rgba(255, 150, 100, 0.3);
-  color: white;
+  color: #000000;
 }
 
 .temp-min {
   background: rgba(100, 150, 255, 0.2);
   border: 1px solid rgba(100, 150, 255, 0.3);
-  color: rgba(255, 255, 255, 0.9);
+  color: #000000;
 }
 
 .forecast-avg-temp {
   font-size: clamp(0.9rem, 2.2vw, 1rem);
   font-weight: 600;
+  color: #000000;
   margin-bottom: 20px;
   padding: 8px 12px;
   background: rgba(255, 255, 255, 0.1);

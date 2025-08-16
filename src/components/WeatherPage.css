@@ -593,6 +593,7 @@
   
   .hourly-temp {
     font-size: 1.1rem;
+    color: #000000;
   }
   
   .hourly-description {
@@ -657,6 +658,7 @@
   
   .hourly-temp {
     font-size: 1rem;
+    color: #000000;
   }
   
   .hourly-description {

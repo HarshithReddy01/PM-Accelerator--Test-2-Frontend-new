@@ -16,6 +16,26 @@ const WeatherHistory = () => {
     end_date: ''
   });
 
+  const handleBackToForecast = () => {
+    // Try to get user's current location first
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          navigate(`/weather/${latitude},${longitude}`);
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          // Fallback to a default location (New York)
+          navigate('/weather/New York');
+        }
+      );
+    } else {
+      // Fallback to a default location if geolocation is not supported
+      navigate('/weather/New York');
+    }
+  };
+
   const fetchRecords = async () => {
     try {
       setLoading(true);
@@ -166,7 +186,7 @@ const WeatherHistory = () => {
   return (
     <div className="weather-history">
       <div className="back-button-container">
-        <button onClick={() => navigate('/')} className="back-to-forecast-btn">
+        <button onClick={handleBackToForecast} className="back-to-forecast-btn">
           <MdArrowBack /> Back to Weather Forecast
         </button>
       </div>

@@ -64,9 +64,11 @@
 
 .hourly-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
   margin-top: 20px;
+  max-height: 600px;
+  overflow-y: auto;
 }
 
 .hourly-item {
@@ -118,6 +120,7 @@
 .hour-temp {
   font-size: 1.8rem;
   font-weight: 700;
+  color: #000000;
   margin: 10px 0;
   position: relative;
   z-index: 1;
@@ -192,6 +195,24 @@
   padding: 40px;
   color: #666;
   font-style: italic;
+}
+
+.current-hour {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
+
+.current-indicator {
+  color: #ffd700;
+  font-size: 1.2rem;
+  margin-left: 5px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 
