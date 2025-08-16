@@ -12,10 +12,10 @@ function HomePage() {
 
   const handleSearch = (searchQuery) => {
     if (typeof searchQuery === 'object' && searchQuery.latitude && searchQuery.longitude) {
-      console.log('📍 Navigating with coordinates:', searchQuery.latitude, searchQuery.longitude);
+      console.log(' Navigating with coordinates:', searchQuery.latitude, searchQuery.longitude);
       navigate(`/weather/${searchQuery.latitude},${searchQuery.longitude}`);
     } else if (typeof searchQuery === 'string' && searchQuery.trim()) {
-      console.log('📍 Navigating with string query:', searchQuery);
+      console.log('Navigating with string query:', searchQuery);
       navigate(`/weather/${encodeURIComponent(searchQuery)}`);
     }
   };
@@ -98,7 +98,7 @@ function HomePage() {
 
 function App() {
   return (
-    <Router basename="/PM-Accelerator--Test-1">
+    <Router basename="/PM-Accelerator--Test-2-Frontend-new">
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/weather/:location" element={<WeatherPage />} />
