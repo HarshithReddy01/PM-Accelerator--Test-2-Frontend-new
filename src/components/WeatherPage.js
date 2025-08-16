@@ -5,7 +5,7 @@ import ForecastDisplay from './ForecastDisplay';
 import LoadingSpinner from './LoadingSpinner';
 import ErrorMessage from './ErrorMessage';
 import YouTubeVideos from './YouTubeVideos';
-
+import SaveWeather from './SaveWeather';
 import NearbyPlaces from './NearbyPlaces';
 import './WeatherPage.css';
 
@@ -32,6 +32,7 @@ function WeatherPage() {
   const [error, setError] = useState(null);
   const [unit, setUnit] = useState('metric');
   const [activeSection, setActiveSection] = useState('today'); // today, forecast, videos, places
+  const [showSaveForm, setShowSaveForm] = useState(false);
 
   // 5-day forecast using OpenWeatherMap API
   const fetchForecastData = useCallback(async (lat, lon) => {
@@ -530,6 +531,14 @@ function WeatherPage() {
               <p className="location-display">📍 {weatherData.name}, {weatherData.sys.country}</p>
             )}
           </div>
+          <div className="header-right">
+            <button className="save-button" onClick={() => setShowSaveForm(true)}>
+              💾 Save Weather
+            </button>
+            <button className="history-button" onClick={() => navigate('/history')}>
+              📚 History
+            </button>
+          </div>
 
         </header>
 
@@ -543,6 +552,23 @@ function WeatherPage() {
 
         {weatherData && !loading && (
           <div className="weather-content">
+            {/* Save Weather Modal */}
+            {showSaveForm && (
+              <div className="modal-overlay" onClick={() => setShowSaveForm(false)}>
+                <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                  <button className="modal-close" onClick={() => setShowSaveForm(false)}>✕</button>
+                  <SaveWeather 
+                    currentLocation={weatherData.name}
+                    currentWeatherData={weatherData}
+                    onSaveSuccess={(result) => {
+                      setShowSaveForm(false);
+                      // You can add a success notification here
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
             {/* Navigation Bar */}
             <nav className="weather-navbar">
               <button 

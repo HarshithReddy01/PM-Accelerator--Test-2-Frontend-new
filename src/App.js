@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-route
 import './App.css';
 import SearchBar from './components/SearchBar';
 import WeatherPage from './components/WeatherPage';
+import WeatherHistory from './components/WeatherHistory';
+import SaveWeather from './components/SaveWeather';
 
 function HomePage() {
   const navigate = useNavigate();
@@ -95,6 +97,8 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/weather/:location" element={<WeatherPage />} />
+        <Route path="/history" element={<WeatherHistory />} />
+        <Route path="/save" element={<SaveWeather />} />
       </Routes>
     </Router>
   );
