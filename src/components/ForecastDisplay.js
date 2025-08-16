@@ -21,7 +21,6 @@ function ForecastDisplay({ data, unit }) {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
     
-    // Compare dates using date strings to avoid time issues
     const dateStr = date.toDateString();
     const todayStr = today.toDateString();
     const tomorrowStr = tomorrow.toDateString();
@@ -41,7 +40,6 @@ function ForecastDisplay({ data, unit }) {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
     
-    // Compare dates using date strings to avoid time issues
     const dateStr = date.toDateString();
     const todayStr = today.toDateString();
     const tomorrowStr = tomorrow.toDateString();
@@ -61,11 +59,9 @@ function ForecastDisplay({ data, unit }) {
 
   const getTemperatureUnit = () => unit === 'metric' ? '°C' : '°F';
 
-  // data by day
   const groupByDay = (forecastList) => {
     const grouped = {};
-    forecastList.forEach(item => {
-      // Use local date for grouping to avoid timezone issues
+    forecastList.forEach(item => { 
       const date = new Date(item.dt * 1000).toLocaleDateString('en-CA');
       if (!grouped[date]) {
         grouped[date] = [];
@@ -94,16 +90,14 @@ function ForecastDisplay({ data, unit }) {
       wind_speed: Math.round((windSpeeds.reduce((a, b) => a + b, 0) / windSpeeds.length) * 10) / 10,
       pressure: Math.round(pressures.reduce((a, b) => a + b, 0) / pressures.length),
       weather: dayData[Math.floor(dayData.length / 2)].weather[0],
-      pop: Math.max(...dayData.map(item => item.pop || 0)) // Max probability of precipitation
+      pop: Math.max(...dayData.map(item => item.pop || 0))
     };
   };
 
-  // Group 3-hour forecast data by day and calculate daily averages
   console.log('Raw forecast data list length:', data.list ? data.list.length : 0);
   console.log('First forecast item:', data.list ? data.list[0] : 'No data');
   console.log('Last forecast item:', data.list ? data.list[data.list.length - 1] : 'No data');
   
-  // Debug: Log all forecast dates to see what we're getting
   if (data.list) {
     console.log('All forecast dates from API:');
     data.list.forEach((item, index) => {
@@ -114,18 +108,15 @@ function ForecastDisplay({ data, unit }) {
   
   const groupedForecast = groupByDay(data.list);
   
-  // Use local dates instead of UTC to avoid timezone issues
   const now = new Date();
-  const today = now.toLocaleDateString('en-CA'); // YYYY-MM-DD format in local timezone
+  const today = now.toLocaleDateString('en-CA'); 
   
-  // Debug: Log the available dates
   console.log('Available dates in forecast:', Object.keys(groupedForecast));
   console.log('Today (local):', today);
   console.log('Current time:', now.toLocaleString());
   console.log('Current date object:', now);
   console.log('Today string format:', today);
   
-  // Get tomorrow's date for comparison
   const tomorrow = new Date(now);
   tomorrow.setDate(tomorrow.getDate() + 1);
   const tomorrowStr = tomorrow.toLocaleDateString('en-CA');
@@ -133,31 +124,24 @@ function ForecastDisplay({ data, unit }) {
   console.log('Tomorrow (local):', tomorrowStr);
   console.log('All available dates:', Object.keys(groupedForecast).sort());
   
-  // Get all available dates and sort them
   const allDates = Object.keys(groupedForecast).sort();
   console.log('All available dates from API:', allDates);
   console.log('Total available dates:', allDates.length);
   
-  // Find the index of today in the sorted dates
   const todayIndex = allDates.indexOf(today);
   console.log('Today index in available dates:', todayIndex);
   
-  // Get exactly 5 days starting from today (including today)
   let next5Days = [];
   
   if (todayIndex >= 0) {
-    // If today is found, get today plus the next 4 days
     next5Days = allDates.slice(todayIndex, todayIndex + 5);
   } else {
-    // If today is not found, get the first 5 days available
     next5Days = allDates.slice(0, 5);
   }
   
-  // If we don't have 5 days, try to get more days from the available data
   if (next5Days.length < 5) {
     console.warn(`Only ${next5Days.length} days available, trying to get more...`);
     
-    // Try to get more days from the remaining data
     const remainingDays = allDates.slice(todayIndex >= 0 ? todayIndex + 5 : 5);
     if (remainingDays.length > 0) {
       const additionalDays = remainingDays.slice(0, 5 - next5Days.length);
@@ -165,7 +149,6 @@ function ForecastDisplay({ data, unit }) {
       console.log('Added additional days:', additionalDays);
     }
         
-        // If we still don't have 5 days, try to get more days from the beginning
         if (next5Days.length < 5) {
           const moreDays = allDates.slice(0, 5);
           if (moreDays.length > next5Days.length) {
@@ -183,16 +166,14 @@ function ForecastDisplay({ data, unit }) {
       const dayData = groupedForecast[date];
       if (!dayData) return null;
       
-      // Create a proper Date object for the forecast day using local timezone
-      const forecastDate = new Date(date + 'T12:00:00'); // Use noon in local timezone
+      const forecastDate = new Date(date + 'T12:00:00'); 
       return {
         date: forecastDate,
         data: calculateDailyAverages(dayData)
       };
     })
-    .filter(Boolean); // Remove any null entries
+    .filter(Boolean); // Removes any nul
     
-  // Debug: Log the final forecast dates
   console.log('Final forecast dates:', dailyForecasts.map(f => f.date.toDateString()));
   console.log('Final forecast dates (formatted):', dailyForecasts.map(f => f.date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })));
 

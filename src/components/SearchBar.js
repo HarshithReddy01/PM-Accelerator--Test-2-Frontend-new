@@ -9,12 +9,10 @@ const SearchBar = ({ onSearch }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchContainerRef = useRef(null);
 
-  // No need to initialize Google Places since we're using Nominatim for suggestions
   useEffect(() => {
     console.log('Using Nominatim (OpenStreetMap) for location suggestions');
   }, []);
 
-  // Debounced search for suggestions
   useEffect(() => {
     if (query.length < 2) {
       setSuggestions([]);
@@ -30,7 +28,6 @@ const SearchBar = ({ onSearch }) => {
   }, [query]);
 
   const fetchLocationSuggestions = () => {
-    // Use Nominatim (OpenStreetMap) for suggestions
     console.log('Fetching suggestions with Nominatim for:', query);
     fetchNominatimSuggestions();
   };
@@ -54,23 +51,12 @@ const SearchBar = ({ onSearch }) => {
         console.log('Nominatim response:', data);
         
         if (data && data.length > 0) {
-          // Convert Nominatim format to show detailed location info
           const convertedSuggestions = data.map(result => {
             const address = result.address || {};
-            
-            // Get city name (fallback order: city -> town -> village)
             const city = address.city || address.town || address.village || '';
-            
-            // Get state (fallback to state_district if state missing)
             const state = address.state || address.state_district || '';
-            
-            // Get country
             const country = address.country || '';
-            
-            // Get ZIP code (may be missing for some places)
             const zip = address.postcode || '';
-            
-            // Format: City, State, Country, Zip, (Latitude, Longitude)
             const description = `${city}, ${state}, ${country}, ${zip}, (${parseFloat(result.lat).toFixed(4)}, ${parseFloat(result.lon).toFixed(4)})`;
             
             return {
@@ -80,10 +66,8 @@ const SearchBar = ({ onSearch }) => {
                 main_text: city || result.display_name.split(',')[0],
                 secondary_text: `${state}, ${country}, ${zip}, (${parseFloat(result.lat).toFixed(4)}, ${parseFloat(result.lon).toFixed(4)})`
               },
-              // Add coordinates for direct use
               latitude: parseFloat(result.lat),
               longitude: parseFloat(result.lon),
-              // Add additional info for display
               name: city || result.display_name.split(',')[0],
               country_code: country,
               coordinates: `(${parseFloat(result.lat).toFixed(4)}, ${parseFloat(result.lon).toFixed(4)})`
@@ -113,10 +97,8 @@ const SearchBar = ({ onSearch }) => {
   const handleSuggestionClick = (suggestion) => {
     console.log('🔍 Selected suggestion:', suggestion);
     
-    // Nominatim data has direct coordinates
     console.log('📍 Nominatim coordinates:', suggestion.latitude, suggestion.longitude);
     
-    // Pass coordinates directly to onSearch
     const searchData = {
       latitude: suggestion.latitude,
       longitude: suggestion.longitude,
@@ -126,7 +108,6 @@ const SearchBar = ({ onSearch }) => {
     console.log('🚀 Passing to onSearch:', searchData);
     onSearch(searchData);
     
-    // Set the query to show the clean location name
     setQuery(suggestion.name);
     setSuggestions([]);
     setShowSuggestions(false);
@@ -191,7 +172,6 @@ const SearchBar = ({ onSearch }) => {
   };
 
   const handleInputBlur = () => {
-    // Delay hiding suggestions to allow for clicks
     setTimeout(() => {
       setShowSuggestions(false);
       setSelectedIndex(-1);
@@ -268,7 +248,6 @@ const SearchBar = ({ onSearch }) => {
         </div>
       </form>
 
-      {/* Location Suggestions */}
       {showSuggestions && (
         <div className="location-suggestions">
           {isLoadingSuggestions ? (

@@ -31,12 +31,11 @@ function WeatherPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [unit, setUnit] = useState('metric');
-  const [activeSection, setActiveSection] = useState('today'); // today, forecast, videos, places
+  const [activeSection, setActiveSection] = useState('today'); 
   const [showSaveForm, setShowSaveForm] = useState(false);
 
 
 
-  // 5-day forecast using OpenWeatherMap API
   const fetchForecastData = useCallback(async (lat, lon) => {
     if (!API_KEY) {
       console.error('OpenWeatherMap API key not configured for forecast');
@@ -69,16 +68,13 @@ function WeatherPage() {
     }
   }, [unit]);
 
-  // Today's weather with 3-hour intervals using backend API
   const fetchTodaysWeather = useCallback(async (lat, lon, locationName) => {
     try {
-      // Use backend API for today's weather with 3-hour intervals
       const todayUrl = `http://localhost:5000/api/today/${encodeURIComponent(locationName)}`;
       
       let response = await fetch(todayUrl);
       
       if (!response.ok) {
-        // Fallback to coordinates endpoint
         const coordUrl = `http://localhost:5000/api/today/coordinates?lat=${lat}&lon=${lon}`;
         
         response = await fetch(coordUrl);
@@ -94,7 +90,6 @@ function WeatherPage() {
       
       if (data.weather_data && data.weather_data.hourly_forecasts) {
         
-        // Convert to hourly data format for consistency
         const hourlyList = data.weather_data.hourly_forecasts.map(forecast => ({
           dt: forecast.timestamp,
           temp: forecast.temperature,
@@ -137,7 +132,6 @@ function WeatherPage() {
     }
   }, []);
 
-  // Helper function to convert weather description to ID
   const getWeatherIdFromDescription = (description) => {
     const desc = description.toLowerCase();
     if (desc.includes('thunderstorm')) return 200;
@@ -147,10 +141,9 @@ function WeatherPage() {
     if (desc.includes('mist') || desc.includes('fog')) return 700;
     if (desc.includes('clear')) return 800;
     if (desc.includes('cloud')) return 801;
-    return 800; // default to clear
+    return 800; 
   };
 
-  // data from API
   const fetchWeatherData = useCallback(async (query) => {
     if (!API_KEY) {
       console.error('API key not configured');
@@ -165,17 +158,14 @@ function WeatherPage() {
     try {
       let response;
       let searchQuery;
-      let latNum, lonNum; // Declare variables at function scope
+      let latNum, lonNum; 
       
-      // Handle both coordinate objects and string queries
       if (typeof query === 'object' && query.latitude && query.longitude) {
-        // Coordinate object from Google Places
         latNum = query.latitude;
         lonNum = query.longitude;
         searchQuery = `${latNum},${lonNum}`;
         console.log('Processing coordinate object:', { latNum, lonNum });
       } else {
-        // String query
         searchQuery = query.trim();
         console.log('Processing string query:', searchQuery);
         
@@ -183,7 +173,6 @@ function WeatherPage() {
           const [lat, lon] = searchQuery.split(',').map(coord => coord.trim());
           console.log('Parsed coordinates:', { lat, lon });
           
-          // Validity check
           latNum = parseFloat(lat);
           lonNum = parseFloat(lon);
           
@@ -201,7 +190,6 @@ function WeatherPage() {
         }
       }
       
-      // Use OpenWeatherMap API for all queries (more reliable)
       if (latNum && lonNum) {
         response = await fetch(
           `${BASE_URL}/weather?lat=${latNum}&lon=${lonNum}&appid=${API_KEY}&units=${unit}`
@@ -225,18 +213,10 @@ function WeatherPage() {
        }
        
              const data = await response.json();
-             
-             // Handle OpenWeatherMap response
              setWeatherData(data);
-             
-             // Get coordinates for forecast
              const forecastLat = data.coord.lat;
              const forecastLon = data.coord.lon;
-             
-             // Fetch forecast data
              await fetchForecastData(forecastLat, forecastLon);
-             
-             // Fetch today's weather with 3-hour intervals
              await fetchTodaysWeather(forecastLat, forecastLon, data.name);
     } catch (err) {
       console.error('Error in fetchWeatherData:', err);
@@ -253,25 +233,21 @@ function WeatherPage() {
     if (location) {
       const decodedLocation = decodeURIComponent(location);
       
-      // Check if it's a coordinate string (contains comma)
       if (decodedLocation.includes(',')) {
         const [lat, lon] = decodedLocation.split(',').map(coord => coord.trim());
         const latNum = parseFloat(lat);
         const lonNum = parseFloat(lon);
         
         if (!isNaN(latNum) && !isNaN(lonNum)) {
-          // Pass as coordinate object
           fetchWeatherData({
             latitude: latNum,
             longitude: lonNum,
             formatted_address: decodedLocation
           });
         } else {
-          // Fallback to string
           fetchWeatherData(decodedLocation);
         }
       } else {
-        // String query (city name)
         fetchWeatherData(decodedLocation);
       }
     }
@@ -306,7 +282,6 @@ function WeatherPage() {
               <div className="hourly-forecast-section">
                 <h3>Next Hours Forecast</h3>
                 
-                {/* Today's Summary */}
                 {hourlyData && hourlyData.today_summary && (
                   <div className="today-summary">
                     <h4>Today's Summary</h4>
@@ -356,11 +331,9 @@ function WeatherPage() {
                     let todayItems = [];
                     
                     if (hourlyData && hourlyData.hourly) {
-                      // Use 3-hour interval data from backend
                       todayItems = hourlyData.hourly;
                       console.log('Using 3-hour interval data:', todayItems.length, 'items');
                     } else if (forecastData && forecastData.list) {
-                      // Fallback to 3-hour forecast data from OpenWeather
                       todayItems = forecastData.list
                         .filter(item => {
                           const itemDate = new Date(item.dt * 1000);
@@ -489,7 +462,6 @@ function WeatherPage() {
       </video>
       
       <div className="weather-page-container">
-        {/* Header */}
         <header className="weather-page-header">
           <div className="header-left">
             <button className="back-button" onClick={handleBackClick}>
@@ -523,7 +495,6 @@ function WeatherPage() {
 
         {weatherData && !loading && (
           <div className="weather-content">
-            {/* Save Weather Modal */}
             {showSaveForm && (
               <div className="modal-overlay" onClick={() => setShowSaveForm(false)}>
                 <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -533,14 +504,12 @@ function WeatherPage() {
                     currentWeatherData={weatherData}
                     onSaveSuccess={(result) => {
                       setShowSaveForm(false);
-                      // You can add a success notification here
                     }}
                   />
                 </div>
               </div>
             )}
 
-            {/* Navigation Bar */}
             <nav className="weather-navbar">
               <button 
                 className={`nav-button ${activeSection === 'today' ? 'active' : ''}`}
@@ -569,7 +538,6 @@ function WeatherPage() {
               </button>
             </nav>
 
-            {/* Section Content */}
             {renderSection()}
           </div>
         )}

@@ -195,7 +195,7 @@
   .forecast-grid {
     grid-template-columns: repeat(5, 1fr);
     gap: 10px;
-    min-width: 750px; /* Ensure minimum width for 5 cards */
+    min-width: 750px; 
   }
   
   .forecast-day {
@@ -225,7 +225,7 @@
   .forecast-grid {
     grid-template-columns: repeat(5, 1fr);
     gap: 8px;
-    min-width: 600px; /* Ensure minimum width for 5 cards */
+    min-width: 600px; 
   }
   
   .forecast-day {

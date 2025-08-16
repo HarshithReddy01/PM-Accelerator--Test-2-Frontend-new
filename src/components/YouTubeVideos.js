@@ -17,15 +17,10 @@ const YouTubeVideos = ({ location }) => {
     console.log('🎬 YouTubeVideos component received location:', location);
 
     const fetchYouTubeVideos = async () => {
-      // Cancel any ongoing request
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
-      
-      // Create new abort controller
       abortControllerRef.current = new AbortController();
-      
-      // Check cache first
       const cacheKey = location.toLowerCase().trim();
       if (cache[cacheKey]) {
         console.log('Using cached videos for:', location);
@@ -39,8 +34,6 @@ const YouTubeVideos = ({ location }) => {
       
       try {
         console.log('🎬 Fetching YouTube videos for location:', location);
-        
-        // Use the backend endpoint
         const encodedLocation = encodeURIComponent(location);
         const apiUrl = `http://localhost:5000/api/youtube/${encodedLocation}`;
         console.log('🎬 API URL:', apiUrl);
@@ -69,22 +62,18 @@ const YouTubeVideos = ({ location }) => {
         const videoList = videosData.videos || [];
         console.log('🎬 Video list length:', videoList.length);
         console.log('🎬 First video structure:', videoList[0]);
-        setVideos(videoList);
-        
-        // Cache the results for 5 minutes
+        setVideos(videoList); 
         setCache(prevCache => ({
           ...prevCache,
           [cacheKey]: videoList
-        }));
-        
-        // Clear cache after 5 minutes
+        }));  
         setTimeout(() => {
           setCache(prevCache => {
             const newCache = { ...prevCache };
             delete newCache[cacheKey];
             return newCache;
           });
-        }, 5 * 60 * 1000); // 5 minutes
+        }, 5 * 60 * 1000); 
         
       } catch (err) {
         if (err.name === 'AbortError') {
@@ -99,8 +88,6 @@ const YouTubeVideos = ({ location }) => {
     };
 
     fetchYouTubeVideos();
-
-    // Cleanup function
     return () => {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
@@ -146,29 +133,20 @@ const YouTubeVideos = ({ location }) => {
       <h3>Location Videos</h3>
       <div className="youtube-videos-grid">
         {videos.map((video) => {
-          // Handle both backend simplified structure and original YouTube API structure
           const videoId = video.id?.videoId || video.id;
           const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-          
-          // Get video details with fallbacks for different response structures
           const title = video.title || video.snippet?.title || 'Untitled Video';
           const description = video.description || video.snippet?.description || '';
           const channelTitle = video.channel_title || video.snippet?.channelTitle || 'Unknown Channel';
           const publishedAt = video.published_at || video.snippet?.publishedAt || new Date().toISOString();
-          
-          // Handle thumbnail with fallbacks
           let thumbnailUrl = '';
           if (video.thumbnail) {
-            // Backend simplified structure
             thumbnailUrl = video.thumbnail;
           } else if (video.snippet?.thumbnails?.medium?.url) {
-            // Original YouTube API structure
             thumbnailUrl = video.snippet.thumbnails.medium.url;
           } else if (video.snippet?.thumbnails?.default?.url) {
-            // Fallback to default thumbnail
             thumbnailUrl = video.snippet.thumbnails.default.url;
           } else {
-            // Default placeholder
             thumbnailUrl = 'https://via.placeholder.com/320x180/ff0000/ffffff?text=No+Thumbnail';
           }
           
@@ -178,7 +156,6 @@ const YouTubeVideos = ({ location }) => {
               window.open(videoUrl, '_blank', 'noopener,noreferrer');
             } catch (error) {
               console.error('Error opening video:', error);
-              // Fallback: try to open in same window
               window.location.href = videoUrl;
             }
           };

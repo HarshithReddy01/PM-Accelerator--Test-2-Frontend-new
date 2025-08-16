@@ -4,19 +4,12 @@ import './WeatherDisplay.css';
 
 function WeatherDisplay({ data, unit, onUnitToggle }) {
   const getWeatherIcon = (weatherId) => {
-    // thunderstorm
     if (weatherId >= 200 && weatherId < 300) return '⛈️';
-    // drizzle
     if (weatherId >= 300 && weatherId < 400) return '🌧️';
-    // rain
     if (weatherId >= 500 && weatherId < 600) return '🌧️';
-    // snow
     if (weatherId >= 600 && weatherId < 700) return '❄️';
-    // atmosphere (fog, mist, etc)
     if (weatherId >= 700 && weatherId < 800) return '🌫️';
-    // clear
     if (weatherId === 800) return '☀️';
-    // clouds
     if (weatherId >= 801 && weatherId < 900) return '☁️';
     return '🌤️';
   };

@@ -12,7 +12,6 @@ const WeatherHistory = () => {
     end_date: ''
   });
 
-  // Fetch all weather records
   const fetchRecords = async () => {
     try {
       setLoading(true);
@@ -34,7 +33,6 @@ const WeatherHistory = () => {
     fetchRecords();
   }, []);
 
-  // Delete a record
   const deleteRecord = async (id) => {
     if (window.confirm('Are you sure you want to delete this record?')) {
       try {
@@ -52,7 +50,6 @@ const WeatherHistory = () => {
     }
   };
 
-  // Start editing a record
   const startEdit = (record) => {
     setEditingRecord(record.id);
     setEditForm({
@@ -62,13 +59,11 @@ const WeatherHistory = () => {
     });
   };
 
-  // Cancel editing
   const cancelEdit = () => {
     setEditingRecord(null);
     setEditForm({ location: '', start_date: '', end_date: '' });
   };
 
-  // Update a record
   const updateRecord = async (id) => {
     try {
       const response = await fetch(`http://localhost:5000/api/weather/${id}`, {
@@ -95,7 +90,6 @@ const WeatherHistory = () => {
     }
   };
 
-  // Export data
   const exportData = async (format) => {
     try {
       const response = await fetch(`http://localhost:5000/api/export/${format}`);
@@ -117,7 +111,6 @@ const WeatherHistory = () => {
     }
   };
 
-  // Clear all history
   const clearAllHistory = async () => {
     if (!window.confirm('⚠️ Are you sure you want to delete ALL weather records? This action cannot be undone!')) {
       return;
@@ -132,8 +125,7 @@ const WeatherHistory = () => {
       if (response.ok) {
         setRecords([]);
         setError(null);
-        // Show success message
-        alert('✅ All weather records have been deleted successfully!');
+        alert('All weather records have been deleted successfully!');
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Failed to clear history');
@@ -219,7 +211,7 @@ const WeatherHistory = () => {
                         💾 Save
                       </button>
                       <button onClick={cancelEdit} className="cancel-btn">
-                        ❌ Cancel
+                        Cancel
                       </button>
                     </>
                   ) : (

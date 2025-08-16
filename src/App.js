@@ -10,13 +10,10 @@ function HomePage() {
   const navigate = useNavigate();
 
   const handleSearch = (searchQuery) => {
-    // Handle both string queries and coordinate objects
     if (typeof searchQuery === 'object' && searchQuery.latitude && searchQuery.longitude) {
-      // Coordinates object from Nominatim
       console.log('📍 Navigating with coordinates:', searchQuery.latitude, searchQuery.longitude);
       navigate(`/weather/${searchQuery.latitude},${searchQuery.longitude}`);
     } else if (typeof searchQuery === 'string' && searchQuery.trim()) {
-      // String query
       console.log('📍 Navigating with string query:', searchQuery);
       navigate(`/weather/${encodeURIComponent(searchQuery)}`);
     }

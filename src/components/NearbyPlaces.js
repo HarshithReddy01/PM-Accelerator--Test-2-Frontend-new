@@ -27,11 +27,9 @@ const NearbyPlaces = ({ latitude, longitude }) => {
     try {
       console.log(`🔍 Fetching nearby ${placeType}s for coordinates: ${latitude}, ${longitude}`);
       const apiUrl = `http://localhost:5000/api/places/nearby?lat=${latitude}&lon=${longitude}&type=${placeType}`;
-      console.log(`🌐 API URL: ${apiUrl}`);
-      
-      // Add timeout to prevent long loading
+      console.log(` API URL: ${apiUrl}`);
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 15000); 
       
       const response = await fetch(apiUrl, { signal: controller.signal });
       clearTimeout(timeoutId);
@@ -43,10 +41,9 @@ const NearbyPlaces = ({ latitude, longitude }) => {
       
       if (response.ok) {
         const placesList = data.places || [];
-        console.log(`✅ Found ${placesList.length} ${placeType}s`);
+        console.log(` Found ${placesList.length} ${placeType}s`);
         setPlaces(placesList);
         
-        // Store places for map display
         setAllPlaces(prev => ({
           ...prev,
           [placeType]: placesList
@@ -69,10 +66,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
   };
 
   const getGoogleMapsUrl = () => {
-    // Create a Google Maps URL with all places marked
     const baseUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
-    
-    // Add all places as markers
     const allPlacesList = [
       ...allPlaces.restaurant.map(p => ({ ...p, type: 'restaurant' })),
       ...allPlaces.hospital.map(p => ({ ...p, type: 'hospital' })),
@@ -99,20 +93,16 @@ const NearbyPlaces = ({ latitude, longitude }) => {
   };
 
   const getPhotoUrl = (place) => {
-    // First, try to use the photo_url provided by the backend
     if (place.photo_url) {
       return place.photo_url;
     }
     
-    // Fallback: construct URL from photos array
     if (place.photos && place.photos.length > 0) {
       const photoRef = place.photos[0].photo_reference;
-      // For mock photos, return placeholder directly
       if (photoRef.startsWith('mock_photo_')) {
         const photoNumber = photoRef.split('_')[-1];
         return `https://via.placeholder.com/400x300/4A90E2/ffffff?text=Place+Photo+${photoNumber}`;
       }
-      // For real photos, use direct Google Places Photo API URL
       const apiKey = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
       if (apiKey) {
         return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoRef}&key=${process.env.REACT_APP_GOOGLE_PLACES_API_KEY}`;
@@ -144,7 +134,6 @@ const NearbyPlaces = ({ latitude, longitude }) => {
     const mapsUrl = getPlaceGoogleMapsUrl(place);
     const openStatus = isOpenNow(place.opening_hours);
     
-    // Determine place type from place types array
     const placeType = place.types && place.types.includes('restaurant') ? 'restaurant' : 
                      place.types && place.types.includes('hospital') ? 'hospital' : 'lodging';
 
@@ -241,7 +230,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
     return (
       <div className="nearby-places">
         <div className="nearby-places-header">
-          <h2>📍 Nearby Places</h2>
+          <h2>Nearby Places</h2>
           <p>Search for a location to see nearby places</p>
         </div>
       </div>
@@ -251,10 +240,9 @@ const NearbyPlaces = ({ latitude, longitude }) => {
   return (
     <div className="nearby-places">
       <div className="nearby-places-header">
-        <h2>📍 Nearby Places</h2>
+        <h2>Nearby Places</h2>
         <p>Discover places around your selected location</p>
         
-        {/* Open in Google Maps Button */}
         <a 
           href={getGoogleMapsUrl()}
           target="_blank"
@@ -266,7 +254,6 @@ const NearbyPlaces = ({ latitude, longitude }) => {
         </a>
       </div>
 
-      {/* Map Section */}
       <div className="map-section">
         <div className="map-container">
           <iframe
@@ -319,7 +306,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
           </div>
         ) : error ? (
           <div className="places-error">
-            <p>❌ {error}</p>
+            <p> {error}</p>
             <button onClick={() => fetchNearbyPlaces(activeTab)} className="retry-button">
               Try Again
             </button>

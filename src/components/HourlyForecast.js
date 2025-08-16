@@ -20,11 +20,8 @@ const HourlyForecast = ({ location, recordId }) => {
         let response;
         
         if (recordId) {
-          // Use existing record ID
           response = await fetch(`http://localhost:5000/api/hourly/${recordId}?date=${selectedDate}`);
         } else {
-          // Use direct API for better performance
-          // First get coordinates for the location
           const geocodeResponse = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(location)}&limit=1&appid=${process.env.REACT_APP_WEATHER_API_KEY}`);
           
           if (!geocodeResponse.ok) {
@@ -38,7 +35,6 @@ const HourlyForecast = ({ location, recordId }) => {
           
           const { lat, lon } = geocodeData[0];
           
-          // Get hourly forecast using coordinates
           response = await fetch(`http://localhost:5000/api/hourly/direct?lat=${lat}&lon=${lon}`);
         }
 
@@ -53,11 +49,9 @@ const HourlyForecast = ({ location, recordId }) => {
         const data = await response.json();
         console.log('Hourly forecast data:', data);
         
-        // Handle both old and new API response formats
         if (data.hourly_forecast) {
           setHourlyData(data);
         } else {
-          // New API format
           setHourlyData({
             location: location,
             date: selectedDate,
@@ -85,17 +79,16 @@ const HourlyForecast = ({ location, recordId }) => {
   };
 
   const getWeatherIcon = (weatherCode) => {
-    // Map weather codes to icons (simplified)
     const iconMap = {
-      '01': '☀️', // clear sky
-      '02': '⛅', // few clouds
-      '03': '☁️', // scattered clouds
-      '04': '☁️', // broken clouds
-      '09': '🌧️', // shower rain
-      '10': '🌦️', // rain
-      '11': '⛈️', // thunderstorm
-      '13': '🌨️', // snow
-      '50': '🌫️', // mist
+      '01': '☀️', 
+      '02': '⛅', 
+      '03': '☁️', 
+      '04': '☁️', 
+      '09': '🌧️', 
+      '10': '🌦️', 
+      '11': '⛈️', 
+      '13': '🌨️', 
+      '50': '🌫️', 
     };
     
     const code = weatherCode.toString().substring(0, 2);

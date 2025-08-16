@@ -8,7 +8,6 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
     end_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 5 days from now
   });
 
-  // Update form data when currentLocation changes
   React.useEffect(() => {
     if (currentLocation) {
       setFormData(prev => ({
@@ -82,7 +81,6 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
         const result = await response.json();
         setSuccess(true);
         
-        // Reset form with current location if available
         setFormData({
           location: currentLocation || '',
           start_date: new Date().toISOString().split('T')[0],
@@ -93,7 +91,6 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
           onSaveSuccess(result);
         }
         
-        // Auto-hide success message after 3 seconds
         setTimeout(() => setSuccess(false), 3000);
       } else {
         const errorData = await response.json();
@@ -117,7 +114,6 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
     setError(null);
     
     try {
-      // Get current date and 5 days from now
       const today = new Date().toISOString().split('T')[0];
       const fiveDaysFromNow = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
       
@@ -168,12 +164,11 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
 
       {success && (
         <div className="success-message">
-          ✅ Weather data saved successfully!
+          Weather data saved successfully!
         </div>
       )}
 
       <div className="save-options">
-        {/* Quick Save Option */}
         {currentLocation && currentWeatherData && (
           <div className="quick-save-section">
             <h4>Quick Save Current Weather</h4>
@@ -192,12 +187,11 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
           <span>OR</span>
         </div>
 
-        {/* Custom Save Form */}
         <div className="custom-save-section">
           <h4>Custom Weather Save</h4>
           <form onSubmit={handleSubmit} className="save-form">
             <div className="form-group">
-              <label htmlFor="location">📍 Location:</label>
+              <label htmlFor="location">Location:</label>
               <input
                 type="text"
                 id="location"

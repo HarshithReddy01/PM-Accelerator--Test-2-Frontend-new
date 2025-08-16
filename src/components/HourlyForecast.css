@@ -194,7 +194,7 @@
   font-style: italic;
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
   .hourly-header {
     flex-direction: column;

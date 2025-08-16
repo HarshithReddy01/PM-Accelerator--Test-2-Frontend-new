@@ -358,7 +358,6 @@
   font-weight: 500;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .weather-history {
     padding: 15px;
