@@ -5,7 +5,7 @@ import ForecastDisplay from './ForecastDisplay';
 import LoadingSpinner from './LoadingSpinner';
 import ErrorMessage from './ErrorMessage';
 import YouTubeVideos from './YouTubeVideos';
-
+import SaveWeather from './SaveWeather';
 import NearbyPlaces from './NearbyPlaces';
 import './WeatherPage.css';
 
@@ -32,6 +32,7 @@ function WeatherPage() {
   const [error, setError] = useState(null);
   const [unit, setUnit] = useState('metric');
   const [activeSection, setActiveSection] = useState('today'); // today, forecast, videos, places
+  const [showSaveForm, setShowSaveForm] = useState(false);
 
   // 5-day forecast using OpenWeatherMap API
   const fetchForecastData = useCallback(async (lat, lon) => {
@@ -73,88 +74,97 @@ function WeatherPage() {
     }
   }, [unit]);
 
-  // Hourly forecast using OpenWeatherMap One Call API 2.5
-  const fetchHourlyData = useCallback(async (lat, lon) => {
-    if (!API_KEY) {
-      console.error('OpenWeatherMap API key not configured for hourly forecast');
-      return;
-    }
-    
+  // Today's weather with 3-hour intervals using backend API
+  const fetchTodaysWeather = useCallback(async (lat, lon, locationName) => {
     try {
-      // Try backend API first
-      const hourlyUrl = `http://localhost:5000/api/hourly/direct?lat=${lat}&lon=${lon}`;
-      console.log('⏰ Hourly API URL:', hourlyUrl);
+      console.log('🌤️ Fetching today\'s weather with 3-hour intervals for:', locationName);
       
-      let response = await fetch(hourlyUrl);
+      // Use backend API for today's weather with 3-hour intervals
+      const todayUrl = `http://localhost:5000/api/today/${encodeURIComponent(locationName)}`;
+      console.log('🌤️ Today\'s weather API URL:', todayUrl);
       
-      console.log('⏰ Hourly API response status:', response.status);
+      let response = await fetch(todayUrl);
       
-      let data;
+      console.log('🌤️ Today\'s weather API response status:', response.status);
       
       if (!response.ok) {
-        console.log('⏰ Backend API failed, trying OpenWeatherMap API directly...');
-        // Fallback to OpenWeatherMap API directly
-        const openWeatherUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${unit}&exclude=current,minutely,daily,alerts`;
-        console.log('⏰ OpenWeatherMap API URL:', openWeatherUrl);
+        console.log('🌤️ Backend API failed, falling back to coordinates endpoint...');
+        // Fallback to coordinates endpoint
+        const coordUrl = `http://localhost:5000/api/today/coordinates?lat=${lat}&lon=${lon}`;
+        console.log('🌤️ Coordinates fallback URL:', coordUrl);
         
-        response = await fetch(openWeatherUrl);
+        response = await fetch(coordUrl);
         
         if (!response.ok) {
           const errorText = await response.text();
-          console.error('⏰ OpenWeatherMap API error:', errorText);
-          throw new Error(`Could not get hourly data: ${response.status} - ${errorText}`);
+          console.error('🌤️ Today\'s weather API error:', errorText);
+          throw new Error(`Could not get today's weather data: ${response.status} - ${errorText}`);
         }
-        
-        const openWeatherData = await response.json();
-        console.log('⏰ OpenWeatherMap API data received:', openWeatherData);
-        
-        // Convert OpenWeatherMap format to our format
-        const hourlyList = openWeatherData.hourly.map(hour => ({
-          dt: hour.dt,
-          temp: hour.temp,
-          feels_like: hour.feels_like,
-          pressure: hour.pressure,
-          humidity: hour.humidity,
-          dew_point: hour.dew_point,
-          uvi: hour.uvi,
-          clouds: hour.clouds,
-          visibility: hour.visibility,
-          wind_speed: hour.wind_speed,
-          wind_deg: hour.wind_deg,
-          wind_gust: hour.wind_gust,
-          weather: hour.weather,
-          pop: hour.pop,
-          dt_txt: new Date(hour.dt * 1000).toISOString()
-        }));
-        
-        data = {
-          hourly_forecast: {
-            hourly: hourlyList,
-            timezone: openWeatherData.timezone,
-            timezone_offset: openWeatherData.timezone_offset,
-            note: 'Using OpenWeatherMap One Call API 2.5 directly'
-          }
-        };
-      } else {
-        data = await response.json();
       }
       
-      console.log('⏰ Final hourly data:', data);
-      console.log('⏰ Number of hourly entries:', data.hourly_forecast?.hourly?.length || 0);
+      const data = await response.json();
+      console.log('🌤️ Today\'s weather data received:', data);
       
-      if (data.hourly_forecast && data.hourly_forecast.hourly && data.hourly_forecast.hourly.length > 0) {
-        console.log('⏰ First hourly entry:', data.hourly_forecast.hourly[0]);
-        console.log('⏰ Last hourly entry:', data.hourly_forecast.hourly[data.hourly_forecast.hourly.length - 1]);
-        setHourlyData(data.hourly_forecast);
+      if (data.weather_data && data.weather_data.hourly_forecasts) {
+        console.log('🌤️ Number of 3-hour forecasts:', data.weather_data.hourly_forecasts.length);
+        console.log('🌤️ First forecast:', data.weather_data.hourly_forecasts[0]);
+        console.log('🌤️ Last forecast:', data.weather_data.hourly_forecasts[data.weather_data.hourly_forecasts.length - 1]);
+        
+        // Convert to hourly data format for consistency
+        const hourlyList = data.weather_data.hourly_forecasts.map(forecast => ({
+          dt: forecast.timestamp,
+          temp: forecast.temperature,
+          feels_like: forecast.feels_like,
+          pressure: forecast.pressure,
+          humidity: forecast.humidity,
+          weather: [{
+            id: getWeatherIdFromDescription(forecast.weather_description),
+            description: forecast.weather_description,
+            main: forecast.weather_main
+          }],
+          wind: {
+            speed: forecast.wind_speed,
+            deg: forecast.wind_deg
+          },
+          clouds: { all: forecast.clouds },
+          pop: forecast.pop,
+          visibility: forecast.visibility,
+          dt_txt: forecast.datetime
+        }));
+        
+        const hourlyData = {
+          hourly: hourlyList,
+          timezone: 'local',
+          timezone_offset: 0,
+          note: 'Using 3-hour intervals from OpenWeather Free Forecast API',
+          current_weather: data.weather_data.current_weather,
+          today_summary: data.weather_data.today_summary
+        };
+        
+        setHourlyData(hourlyData);
+        console.log('🌤️ Converted hourly data:', hourlyData);
       } else {
-        console.error('⏰ No hourly data in response');
+        console.error('🌤️ No hourly forecasts in response');
         setHourlyData(null);
       }
     } catch (err) {
-      console.error('⏰ Hourly error:', err);
+      console.error('🌤️ Today\'s weather error:', err);
       setHourlyData(null);
     }
-  }, [unit]);
+  }, []);
+
+  // Helper function to convert weather description to ID
+  const getWeatherIdFromDescription = (description) => {
+    const desc = description.toLowerCase();
+    if (desc.includes('thunderstorm')) return 200;
+    if (desc.includes('drizzle')) return 300;
+    if (desc.includes('rain')) return 500;
+    if (desc.includes('snow')) return 600;
+    if (desc.includes('mist') || desc.includes('fog')) return 700;
+    if (desc.includes('clear')) return 800;
+    if (desc.includes('cloud')) return 801;
+    return 800; // default to clear
+  };
 
   // data from API
   const fetchWeatherData = useCallback(async (query) => {
@@ -252,9 +262,9 @@ function WeatherPage() {
              console.log('Fetching forecast data...');
              await fetchForecastData(forecastLat, forecastLon);
              
-             // Fetch hourly data too
-             console.log('Fetching hourly data...');
-             await fetchHourlyData(forecastLat, forecastLon);
+             // Fetch today's weather with 3-hour intervals
+             console.log('Fetching today\'s weather with 3-hour intervals...');
+             await fetchTodaysWeather(forecastLat, forecastLon, data.name);
     } catch (err) {
       console.error('Error in fetchWeatherData:', err);
       setError(err.message);
@@ -264,7 +274,7 @@ function WeatherPage() {
       console.log('Setting loading to false');
       setLoading(false);
     }
-  }, [unit, fetchForecastData]);
+  }, [unit, fetchForecastData, fetchTodaysWeather]);
 
   useEffect(() => {
     if (location) {
@@ -294,7 +304,7 @@ function WeatherPage() {
         fetchWeatherData(decodedLocation);
       }
     }
-  }, [location, fetchWeatherData, fetchHourlyData]);
+  }, [location, fetchWeatherData, fetchTodaysWeather]);
 
   const handleBackClick = () => {
     navigate('/');
@@ -308,8 +318,8 @@ function WeatherPage() {
 
   const testHourlyData = async () => {
     if (weatherData && weatherData.coord) {
-      console.log('🧪 Testing hourly data fetch...');
-      await fetchHourlyData(weatherData.coord.lat, weatherData.coord.lon);
+      console.log('🧪 Testing today\'s weather fetch...');
+      await fetchTodaysWeather(weatherData.coord.lat, weatherData.coord.lon, weatherData.name);
     }
   };
 
@@ -323,9 +333,50 @@ function WeatherPage() {
             </div>
             {(hourlyData || forecastData) && (
               <div className="hourly-forecast-section">
-                <h3>Today's Hourly Forecast</h3>
+                <h3>Next Hours Forecast</h3>
+                
+                {/* Today's Summary */}
+                {hourlyData && hourlyData.today_summary && (
+                  <div className="today-summary">
+                    <h4>Today's Summary</h4>
+                    <div className="summary-grid">
+                      <div className="summary-item">
+                        <span className="summary-label">Temperature Range:</span>
+                        <span className="summary-value">
+                          {hourlyData.today_summary.temperature_range?.min && 
+                           hourlyData.today_summary.temperature_range?.max ? 
+                           `${Math.round(hourlyData.today_summary.temperature_range.min)}° - ${Math.round(hourlyData.today_summary.temperature_range.max)}°` : 
+                           'N/A'}
+                        </span>
+                      </div>
+                      <div className="summary-item">
+                        <span className="summary-label">Average Temperature:</span>
+                        <span className="summary-value">
+                          {hourlyData.today_summary.temperature_range?.avg ? 
+                           `${Math.round(hourlyData.today_summary.temperature_range.avg)}°` : 
+                           'N/A'}
+                        </span>
+                      </div>
+                      <div className="summary-item">
+                        <span className="summary-label">Humidity Range:</span>
+                        <span className="summary-value">
+                          {hourlyData.today_summary.humidity_range?.min && 
+                           hourlyData.today_summary.humidity_range?.max ? 
+                           `${hourlyData.today_summary.humidity_range.min}% - ${hourlyData.today_summary.humidity_range.max}%` : 
+                           'N/A'}
+                        </span>
+                      </div>
+                      <div className="summary-item">
+                        <span className="summary-label">Most Common Weather:</span>
+                        <span className="summary-value">
+                          {hourlyData.today_summary.most_common_weather || 'Mixed Conditions'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 <p className="hourly-note">
-                  {hourlyData ? 'Showing hourly forecasts for the complete day (until midnight) using OpenWeather API 2.5' : 'Showing 3-hour intervals for the remaining hours of today'}
+                  {hourlyData ? hourlyData.note || 'Showing 3-hour interval forecasts for the next 24 hours' : 'Loading hourly forecast data...'}
                 </p>
                 {console.log('🔍 Debug - hourlyData:', hourlyData)}
                 {console.log('🔍 Debug - forecastData:', forecastData)}
@@ -334,24 +385,18 @@ function WeatherPage() {
                     let todayItems = [];
                     
                     if (hourlyData && hourlyData.hourly) {
-                      // Use true hourly data
-                      todayItems = hourlyData.hourly
-                        .filter(item => {
-                          const itemDate = new Date(item.dt * 1000);
-                          const today = new Date();
-                          const tomorrow = new Date(today);
-                          tomorrow.setDate(tomorrow.getDate() + 1);
-                          tomorrow.setHours(0, 0, 0, 0); // Start of next day
-                          return itemDate >= today && itemDate < tomorrow;
-                        });
+                      // Use 3-hour interval data from backend
+                      todayItems = hourlyData.hourly;
+                      console.log('Using 3-hour interval data:', todayItems.length, 'items');
                     } else if (forecastData && forecastData.list) {
-                      // Fallback to 3-hour forecast data
+                      // Fallback to 3-hour forecast data from OpenWeather
                       todayItems = forecastData.list
                         .filter(item => {
                           const itemDate = new Date(item.dt * 1000);
                           const today = new Date();
                           return itemDate.toDateString() === today.toDateString();
                         });
+                      console.log('Using fallback forecast data:', todayItems.length, 'items');
                     }
                     
                     console.log('Today\'s hourly items:', todayItems?.length || 0);
@@ -408,8 +453,8 @@ function WeatherPage() {
                               </span>
                             </div>
                             <div className="detail-item">
-                              <span className="detail-label">UV Index:</span>
-                              <span className="detail-value">{item.uvi || 'N/A'}</span>
+                              <span className="detail-label">Rain Chance:</span>
+                              <span className="detail-value">{Math.round((item.pop || 0) * 100)}%</span>
                             </div>
                           </div>
                         </div>
@@ -486,6 +531,14 @@ function WeatherPage() {
               <p className="location-display">📍 {weatherData.name}, {weatherData.sys.country}</p>
             )}
           </div>
+          <div className="header-right">
+            <button className="save-button" onClick={() => setShowSaveForm(true)}>
+              💾 Save Weather
+            </button>
+            <button className="history-button" onClick={() => navigate('/history')}>
+              📚 History
+            </button>
+          </div>
 
         </header>
 
@@ -499,32 +552,49 @@ function WeatherPage() {
 
         {weatherData && !loading && (
           <div className="weather-content">
+            {/* Save Weather Modal */}
+            {showSaveForm && (
+              <div className="modal-overlay" onClick={() => setShowSaveForm(false)}>
+                <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                  <button className="modal-close" onClick={() => setShowSaveForm(false)}>✕</button>
+                  <SaveWeather 
+                    currentLocation={weatherData.name}
+                    currentWeatherData={weatherData}
+                    onSaveSuccess={(result) => {
+                      setShowSaveForm(false);
+                      // You can add a success notification here
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
             {/* Navigation Bar */}
             <nav className="weather-navbar">
               <button 
                 className={`nav-button ${activeSection === 'today' ? 'active' : ''}`}
                 onClick={() => setActiveSection('today')}
               >
-                🌤️ Today's Weather
+                Today's Weather
               </button>
 
               <button 
                 className={`nav-button ${activeSection === 'forecast' ? 'active' : ''}`}
                 onClick={() => setActiveSection('forecast')}
               >
-                📅 5-Day Forecast
+                5-Day Forecast
               </button>
               <button 
                 className={`nav-button ${activeSection === 'videos' ? 'active' : ''}`}
                 onClick={() => setActiveSection('videos')}
               >
-                🎥 Location Videos
+                Location Videos
               </button>
               <button 
                 className={`nav-button ${activeSection === 'places' ? 'active' : ''}`}
                 onClick={() => setActiveSection('places')}
               >
-                📍 Nearby Places
+                Nearby Places
               </button>
             </nav>
 
