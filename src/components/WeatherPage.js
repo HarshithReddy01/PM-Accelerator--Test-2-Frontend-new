@@ -34,6 +34,8 @@ function WeatherPage() {
   const [activeSection, setActiveSection] = useState('today'); // today, forecast, videos, places
   const [showSaveForm, setShowSaveForm] = useState(false);
 
+
+
   // 5-day forecast using OpenWeatherMap API
   const fetchForecastData = useCallback(async (lat, lon) => {
     if (!API_KEY) {
@@ -44,32 +46,25 @@ function WeatherPage() {
     
     try {
       const forecastUrl = `${BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${unit}`;
-      console.log('🌤️ Forecast API URL:', forecastUrl);
       
       const response = await fetch(forecastUrl);
       
-      console.log('🌤️ Forecast API response status:', response.status);
-      
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('🌤️ Forecast API error:', errorText);
+        console.error('Forecast API error:', errorText);
         throw new Error(`Could not get forecast data: ${response.status} - ${errorText}`);
       }
       
       const data = await response.json();
-      console.log('🌤️ Forecast API data received:', data);
-      console.log('🌤️ Number of forecast entries:', data.list ? data.list.length : 0);
       
       if (data.list && data.list.length > 0) {
-        console.log('🌤️ First forecast entry:', data.list[0]);
-        console.log('🌤️ Last forecast entry:', data.list[data.list.length - 1]);
         setForecastData(data);
       } else {
-        console.error('🌤️ No forecast data in response');
+        console.error('No forecast data in response');
         setForecastData(null);
       }
     } catch (err) {
-      console.error('🌤️ Forecast error:', err);
+      console.error('Forecast error:', err);
       setForecastData(null);
     }
   }, [unit]);
@@ -77,21 +72,14 @@ function WeatherPage() {
   // Today's weather with 3-hour intervals using backend API
   const fetchTodaysWeather = useCallback(async (lat, lon, locationName) => {
     try {
-      console.log('🌤️ Fetching today\'s weather with 3-hour intervals for:', locationName);
-      
       // Use backend API for today's weather with 3-hour intervals
       const todayUrl = `http://localhost:5000/api/today/${encodeURIComponent(locationName)}`;
-      console.log('🌤️ Today\'s weather API URL:', todayUrl);
       
       let response = await fetch(todayUrl);
       
-      console.log('🌤️ Today\'s weather API response status:', response.status);
-      
       if (!response.ok) {
-        console.log('🌤️ Backend API failed, falling back to coordinates endpoint...');
         // Fallback to coordinates endpoint
         const coordUrl = `http://localhost:5000/api/today/coordinates?lat=${lat}&lon=${lon}`;
-        console.log('🌤️ Coordinates fallback URL:', coordUrl);
         
         response = await fetch(coordUrl);
         
@@ -103,12 +91,8 @@ function WeatherPage() {
       }
       
       const data = await response.json();
-      console.log('🌤️ Today\'s weather data received:', data);
       
       if (data.weather_data && data.weather_data.hourly_forecasts) {
-        console.log('🌤️ Number of 3-hour forecasts:', data.weather_data.hourly_forecasts.length);
-        console.log('🌤️ First forecast:', data.weather_data.hourly_forecasts[0]);
-        console.log('🌤️ Last forecast:', data.weather_data.hourly_forecasts[data.weather_data.hourly_forecasts.length - 1]);
         
         // Convert to hourly data format for consistency
         const hourlyList = data.weather_data.hourly_forecasts.map(forecast => ({
@@ -142,7 +126,7 @@ function WeatherPage() {
         };
         
         setHourlyData(hourlyData);
-        console.log('🌤️ Converted hourly data:', hourlyData);
+
       } else {
         console.error('🌤️ No hourly forecasts in response');
         setHourlyData(null);
@@ -168,8 +152,6 @@ function WeatherPage() {
 
   // data from API
   const fetchWeatherData = useCallback(async (query) => {
-    console.log('fetchWeatherData called with query:', query);
-    
     if (!API_KEY) {
       console.error('API key not configured');
       setError('API key not configured. Please check your environment variables.');
@@ -179,7 +161,6 @@ function WeatherPage() {
     
     setLoading(true);
     setError(null);
-    console.log('Loading state set to true');
     
     try {
       let response;
@@ -222,18 +203,14 @@ function WeatherPage() {
       
       // Use OpenWeatherMap API for all queries (more reliable)
       if (latNum && lonNum) {
-        console.log('Making OpenWeatherMap API call with coordinates:', { latNum, lonNum });
         response = await fetch(
           `${BASE_URL}/weather?lat=${latNum}&lon=${lonNum}&appid=${API_KEY}&units=${unit}`
         );
       } else {
-        console.log('Making OpenWeatherMap API call with city name:', searchQuery);
         response = await fetch(
           `${BASE_URL}/weather?q=${encodeURIComponent(searchQuery)}&appid=${API_KEY}&units=${unit}`
         );
       }
-       
-       console.log('Weather API response status:', response.status);
              if (!response.ok) {
          console.error('API Error:', response.status, response.statusText);
          if (response.status === 404) {
@@ -248,30 +225,26 @@ function WeatherPage() {
        }
        
              const data = await response.json();
-             console.log('🌤️ Raw API response:', data);
              
              // Handle OpenWeatherMap response
-             console.log('Weather data received:', data.name, data.sys?.country);
              setWeatherData(data);
              
              // Get coordinates for forecast
              const forecastLat = data.coord.lat;
              const forecastLon = data.coord.lon;
              
-             // forecast too
-             console.log('Fetching forecast data...');
+             // Fetch forecast data
              await fetchForecastData(forecastLat, forecastLon);
              
              // Fetch today's weather with 3-hour intervals
-             console.log('Fetching today\'s weather with 3-hour intervals...');
              await fetchTodaysWeather(forecastLat, forecastLon, data.name);
     } catch (err) {
       console.error('Error in fetchWeatherData:', err);
-      setError(err.message);
-      setWeatherData(null);
-      setForecastData(null);
-    } finally {
-      console.log('Setting loading to false');
+              setError(err.message);
+        setWeatherData(null);
+        setForecastData(null);
+        
+      } finally {
       setLoading(false);
     }
   }, [unit, fetchForecastData, fetchTodaysWeather]);
@@ -279,7 +252,6 @@ function WeatherPage() {
   useEffect(() => {
     if (location) {
       const decodedLocation = decodeURIComponent(location);
-      console.log('📍 WeatherPage received location:', decodedLocation);
       
       // Check if it's a coordinate string (contains comma)
       if (decodedLocation.includes(',')) {
@@ -288,7 +260,6 @@ function WeatherPage() {
         const lonNum = parseFloat(lon);
         
         if (!isNaN(latNum) && !isNaN(lonNum)) {
-          console.log('📍 Parsed coordinates from URL:', { latNum, lonNum });
           // Pass as coordinate object
           fetchWeatherData({
             latitude: latNum,
