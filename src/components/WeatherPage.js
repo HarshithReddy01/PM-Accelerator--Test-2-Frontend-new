@@ -72,12 +72,12 @@ function WeatherPage() {
 
   const fetchTodaysWeather = useCallback(async (lat, lon, locationName) => {
     try {
-      const todayUrl = `http://localhost:5000/api/today/${encodeURIComponent(locationName)}`;
+      const todayUrl = `http://3.110.152.13/api/today/${encodeURIComponent(locationName)}`;
       
       let response = await fetch(todayUrl);
       
       if (!response.ok) {
-        const coordUrl = `http://localhost:5000/api/today/coordinates?lat=${lat}&lon=${lon}`;
+        const coordUrl = `http://3.110.152.13/api/today/coordinates?lat=${lat}&lon=${lon}`;
         
         response = await fetch(coordUrl);
         

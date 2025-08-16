@@ -35,7 +35,7 @@ const YouTubeVideos = ({ location }) => {
       try {
         console.log('🎬 Fetching YouTube videos for location:', location);
         const encodedLocation = encodeURIComponent(location);
-        const apiUrl = `http://localhost:5000/api/youtube/${encodedLocation}`;
+        const apiUrl = `http://3.110.152.13/api/youtube/${encodedLocation}`;
         console.log('🎬 API URL:', apiUrl);
         
         const videosResponse = await fetch(

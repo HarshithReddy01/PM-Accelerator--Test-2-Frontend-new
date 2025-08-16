@@ -27,7 +27,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
     
     try {
       console.log(`🔍 Fetching nearby ${placeType}s for coordinates: ${latitude}, ${longitude}`);
-      const apiUrl = `http://localhost:5000/api/places/nearby?lat=${latitude}&lon=${longitude}&type=${placeType}`;
+      const apiUrl = `http://3.110.152.13/api/places/nearby?lat=${latitude}&lon=${longitude}&type=${placeType}`;
       console.log(` API URL: ${apiUrl}`);
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000); 
