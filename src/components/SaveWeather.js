@@ -7,6 +7,16 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
     start_date: new Date().toISOString().split('T')[0],
     end_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 5 days from now
   });
+
+  // Update form data when currentLocation changes
+  React.useEffect(() => {
+    if (currentLocation) {
+      setFormData(prev => ({
+        ...prev,
+        location: currentLocation
+      }));
+    }
+  }, [currentLocation]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -71,8 +81,10 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
       if (response.ok) {
         const result = await response.json();
         setSuccess(true);
+        
+        // Reset form with current location if available
         setFormData({
-          location: '',
+          location: currentLocation || '',
           start_date: new Date().toISOString().split('T')[0],
           end_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
         });
@@ -88,6 +100,7 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
         setError(errorData.error || 'Failed to save weather data');
       }
     } catch (err) {
+      console.error('Save error:', err);
       setError('Error connecting to server');
     } finally {
       setLoading(false);
@@ -104,6 +117,10 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
     setError(null);
     
     try {
+      // Get current date and 5 days from now
+      const today = new Date().toISOString().split('T')[0];
+      const fiveDaysFromNow = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      
       const response = await fetch('http://localhost:5000/api/weather', {
         method: 'POST',
         headers: {
@@ -111,8 +128,8 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
         },
         body: JSON.stringify({
           location: currentLocation,
-          start_date: new Date().toISOString().split('T')[0],
-          end_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+          start_date: today,
+          end_date: fiveDaysFromNow
         })
       });
       
@@ -128,6 +145,7 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
         setError(errorData.error || 'Failed to save current weather');
       }
     } catch (err) {
+      console.error('Save error:', err);
       setError('Error connecting to server');
     } finally {
       setLoading(false);

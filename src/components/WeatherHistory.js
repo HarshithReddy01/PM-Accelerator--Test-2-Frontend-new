@@ -117,6 +117,34 @@ const WeatherHistory = () => {
     }
   };
 
+  // Clear all history
+  const clearAllHistory = async () => {
+    if (!window.confirm('⚠️ Are you sure you want to delete ALL weather records? This action cannot be undone!')) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await fetch('http://localhost:5000/api/weather/clear-all', {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        setRecords([]);
+        setError(null);
+        // Show success message
+        alert('✅ All weather records have been deleted successfully!');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || 'Failed to clear history');
+      }
+    } catch (err) {
+      setError('Error clearing history');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="weather-history">
@@ -148,6 +176,22 @@ const WeatherHistory = () => {
           <button onClick={() => exportData('markdown')} className="export-btn markdown">
             📝 Markdown
           </button>
+        </div>
+        
+        <div className="clear-history-section">
+          <h4>🗑️ Clear History:</h4>
+          <button 
+            onClick={clearAllHistory} 
+            className="clear-history-btn"
+            disabled={loading || records.length === 0}
+          >
+            {loading ? '🗑️ Clearing...' : '🗑️ Clear All Records'}
+          </button>
+          {records.length > 0 && (
+            <p className="clear-warning">
+              ⚠️ This will permanently delete all {records.length} weather records
+            </p>
+          )}
         </div>
       </div>
 
