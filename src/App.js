@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { MdLocationOn } from 'react-icons/md';
 import './App.css';
 import SearchBar from './components/SearchBar';
 import WeatherPage from './components/WeatherPage';
@@ -56,10 +57,17 @@ function HomePage() {
             className="mobile-location-btn"
             aria-label="Get weather for my current location"
           >
-            📍
+            <MdLocationOn />
           </button>
         </div>
         <div className="pm-accelerator-right">
+          <a 
+            href="https://harshithreddy01.github.io/My-Web/" 
+            rel="noopener noreferrer"
+            className="pm-accelerator-link"
+          >
+            Crafted by Harshith Reddy Nalla
+          </a>
           <a 
             href="https://www.pmaccelerator.io/" 
             rel="noopener noreferrer"

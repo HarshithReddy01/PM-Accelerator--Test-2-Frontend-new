@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { WiThunderstorm, WiRain, WiSnow, WiFog, WiDaySunny, WiCloudy, WiDayCloudy } from 'react-icons/wi';
+import { MdLocationOn, MdSave, MdHistory } from 'react-icons/md';
 import WeatherDisplay from './WeatherDisplay';
 import ForecastDisplay from './ForecastDisplay';
 import LoadingSpinner from './LoadingSpinner';
@@ -14,14 +16,14 @@ const BASE_URL = 'https://api.openweathermap.org/data/2.5';
 
 function WeatherPage() {
   const getWeatherIcon = (weatherId) => {
-    if (weatherId >= 200 && weatherId < 300) return '⛈️';
-    if (weatherId >= 300 && weatherId < 400) return '🌧️';
-    if (weatherId >= 500 && weatherId < 600) return '🌧️';
-    if (weatherId >= 600 && weatherId < 700) return '❄️';
-    if (weatherId >= 700 && weatherId < 800) return '🌫️';
-    if (weatherId === 800) return '☀️';
-    if (weatherId >= 801 && weatherId < 900) return '☁️';
-    return '🌤️';
+    if (weatherId >= 200 && weatherId < 300) return <WiThunderstorm />;
+    if (weatherId >= 300 && weatherId < 400) return <WiRain />;
+    if (weatherId >= 500 && weatherId < 600) return <WiRain />;
+    if (weatherId >= 600 && weatherId < 700) return <WiSnow />;
+    if (weatherId >= 700 && weatherId < 800) return <WiFog />;
+    if (weatherId === 800) return <WiDaySunny />;
+    if (weatherId >= 801 && weatherId < 900) return <WiCloudy />;
+    return <WiDayCloudy />;
   };
   const { location } = useParams();
   const navigate = useNavigate();
@@ -471,15 +473,15 @@ function WeatherPage() {
           <div className="header-center">
             <h1>Weather Forecast</h1>
             {weatherData && weatherData.name && weatherData.sys && weatherData.sys.country && (
-              <p className="location-display">📍 {weatherData.name}, {weatherData.sys.country}</p>
+              <p className="location-display"><MdLocationOn /> {weatherData.name}, {weatherData.sys.country}</p>
             )}
           </div>
           <div className="header-right">
             <button className="save-button" onClick={() => setShowSaveForm(true)}>
-              💾 Save Weather
+              <MdSave /> Save Weather
             </button>
             <button className="history-button" onClick={() => navigate('/history')}>
-              📚 History
+              <MdHistory /> History
             </button>
           </div>
 

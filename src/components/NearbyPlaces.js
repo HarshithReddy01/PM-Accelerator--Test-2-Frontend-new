@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { MdRestaurant, MdLocalHospital, MdHotel, MdDirections, MdMap, MdPhone, MdLanguage } from 'react-icons/md';
 import './NearbyPlaces.css';
 
 const NearbyPlaces = ({ latitude, longitude }) => {
@@ -9,9 +10,9 @@ const NearbyPlaces = ({ latitude, longitude }) => {
   const [allPlaces, setAllPlaces] = useState({ restaurant: [], hospital: [], lodging: [] });
 
   const placeTypes = [
-    { key: 'restaurant', label: 'Restaurants', icon: '🍽️' },
-    { key: 'hospital', label: 'Hospitals', icon: '🏥' },
-    { key: 'lodging', label: 'Hotels & Motels', icon: '🏨' }
+    { key: 'restaurant', label: 'Restaurants', icon: <MdRestaurant /> },
+    { key: 'hospital', label: 'Hospitals', icon: <MdLocalHospital /> },
+    { key: 'lodging', label: 'Hotels & Motels', icon: <MdHotel /> }
   ];
 
   useEffect(() => {
@@ -156,7 +157,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
             />
           ) : null}
           <div className="place-image-placeholder" style={{ display: photoUrl ? 'none' : 'block' }}>
-            {placeType === 'restaurant' ? '🍽️' : placeType === 'hospital' ? '🏥' : '🏨'}
+            {placeType === 'restaurant' ? <MdRestaurant /> : placeType === 'hospital' ? <MdLocalHospital /> : <MdHotel />}
           </div>
         </div>
         
@@ -195,7 +196,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
                 className="place-phone"
                 title="Call"
               >
-                📞 {place.formatted_phone_number}
+                <MdPhone /> {place.formatted_phone_number}
               </a>
             )}
             
@@ -207,7 +208,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
                 className="place-website"
                 title="Visit website"
               >
-                🌐 Website
+                <MdLanguage /> Website
               </a>
             )}
             
@@ -218,7 +219,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
               className="place-maps"
               title="Open in Google Maps"
             >
-              🗺️ Directions
+              <MdDirections /> Directions
             </a>
           </div>
         </div>
@@ -250,7 +251,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
           className="open-maps-button"
           title="Open all places in Google Maps"
         >
-          🗺️ Open in Google Maps
+          <MdMap /> Open in Google Maps
         </a>
       </div>
 
@@ -270,15 +271,15 @@ const NearbyPlaces = ({ latitude, longitude }) => {
         
         <div className="map-legend">
           <div className="legend-item">
-            <span className="legend-icon">🍽️</span>
+            <span className="legend-icon"><MdRestaurant /></span>
             <span>Restaurants</span>
           </div>
           <div className="legend-item">
-            <span className="legend-icon">🏥</span>
+            <span className="legend-icon"><MdLocalHospital /></span>
             <span>Hospitals</span>
           </div>
           <div className="legend-item">
-            <span className="legend-icon">🏨</span>
+            <span className="legend-icon"><MdHotel /></span>
             <span>Hotels & Motels</span>
           </div>
         </div>

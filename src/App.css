@@ -90,7 +90,10 @@ body {
 .pm-accelerator-right {
   display: flex;
   align-items: center;
+  gap: 12px;
 }
+
+
 
 .pm-accelerator-link {
   background: transparent;

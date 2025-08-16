@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { MdLocationOn, MdDelete, MdEdit, MdWarning, MdClear, MdDescription, MdAssessment, MdCode, MdPictureAsPdf, MdCreate, MdDateRange, MdPublic, MdAccessTime, MdUpdate } from 'react-icons/md';
 import './WeatherHistory.css';
 
 const WeatherHistory = () => {
@@ -112,7 +113,7 @@ const WeatherHistory = () => {
   };
 
   const clearAllHistory = async () => {
-    if (!window.confirm('⚠️ Are you sure you want to delete ALL weather records? This action cannot be undone!')) {
+    if (!window.confirm('Are you sure you want to delete ALL weather records? This action cannot be undone!')) {
       return;
     }
 
@@ -148,40 +149,40 @@ const WeatherHistory = () => {
   return (
     <div className="weather-history">
       <div className="history-header">
-        <h2>📚 Weather History</h2>
+        <h2>Weather History</h2>
         <p>View and manage your saved weather records</p>
         
         <div className="export-buttons">
           <h4>Export Data:</h4>
           <button onClick={() => exportData('json')} className="export-btn json">
-            📄 JSON
+            <MdCode /> JSON
           </button>
           <button onClick={() => exportData('csv')} className="export-btn csv">
-            📊 CSV
+            <MdAssessment /> CSV
           </button>
           <button onClick={() => exportData('xml')} className="export-btn xml">
-            📋 XML
+            <MdDescription /> XML
           </button>
           <button onClick={() => exportData('pdf')} className="export-btn pdf">
-            📑 PDF
+            <MdPictureAsPdf /> PDF
           </button>
           <button onClick={() => exportData('markdown')} className="export-btn markdown">
-            📝 Markdown
+            <MdCreate /> Markdown
           </button>
         </div>
         
         <div className="clear-history-section">
-          <h4>🗑️ Clear History:</h4>
+          <h4><MdClear /> Clear History:</h4>
           <button 
             onClick={clearAllHistory} 
             className="clear-history-btn"
             disabled={loading || records.length === 0}
           >
-            {loading ? '🗑️ Clearing...' : '🗑️ Clear All Records'}
+            {loading ? <><MdClear /> Clearing...</> : <><MdClear /> Clear All Records</>}
           </button>
           {records.length > 0 && (
             <p className="clear-warning">
-              ⚠️ This will permanently delete all {records.length} weather records
+              <MdWarning /> This will permanently delete all {records.length} weather records
             </p>
           )}
         </div>
@@ -217,10 +218,10 @@ const WeatherHistory = () => {
                   ) : (
                     <>
                       <button onClick={() => startEdit(record)} className="edit-btn">
-                        ✏️ Edit
+                        <MdEdit /> Edit
                       </button>
                       <button onClick={() => deleteRecord(record.id)} className="delete-btn">
-                        🗑️ Delete
+                        <MdDelete /> Delete
                       </button>
                     </>
                   )}
@@ -257,29 +258,29 @@ const WeatherHistory = () => {
               ) : (
                 <div className="record-details">
                   <div className="detail-row">
-                    <span className="label">📍 Location:</span>
+                    <span className="label"><MdLocationOn /> Location:</span>
                     <span className="value">{record.location}</span>
                   </div>
                   <div className="detail-row">
-                    <span className="label">📅 Date Range:</span>
+                    <span className="label"><MdDateRange /> Date Range:</span>
                     <span className="value">
                       {new Date(record.start_date).toLocaleDateString()} - {new Date(record.end_date).toLocaleDateString()}
                     </span>
                   </div>
                   <div className="detail-row">
-                    <span className="label">🌍 Coordinates:</span>
+                    <span className="label"><MdPublic /> Coordinates:</span>
                     <span className="value">
                       {record.latitude?.toFixed(4)}, {record.longitude?.toFixed(4)}
                     </span>
                   </div>
                   <div className="detail-row">
-                    <span className="label">📊 Created:</span>
+                    <span className="label"><MdAccessTime /> Created:</span>
                     <span className="value">
                       {new Date(record.created_at).toLocaleString()}
                     </span>
                   </div>
                   <div className="detail-row">
-                    <span className="label">🔄 Updated:</span>
+                    <span className="label"><MdUpdate /> Updated:</span>
                     <span className="value">
                       {new Date(record.updated_at).toLocaleString()}
                     </span>

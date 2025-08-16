@@ -1,18 +1,19 @@
 import React from 'react';
+import { WiThunderstorm, WiRain, WiSnow, WiFog, WiDaySunny, WiCloudy, WiDayCloudy, WiThermometer, WiUmbrella, WiHumidity, WiStrongWind, WiBarometer } from 'react-icons/wi';
 import './ForecastDisplay.css';
 
 function ForecastDisplay({ data, unit }) {
   console.log('📅 ForecastDisplay received data:', data);
   console.log('📅 ForecastDisplay unit:', unit);
   const getWeatherIcon = (weatherId) => {
-    if (weatherId >= 200 && weatherId < 300) return '⛈️';
-    if (weatherId >= 300 && weatherId < 400) return '🌧️';
-    if (weatherId >= 500 && weatherId < 600) return '🌧️';
-    if (weatherId >= 600 && weatherId < 700) return '❄️';
-    if (weatherId >= 700 && weatherId < 800) return '🌫️';
-    if (weatherId === 800) return '☀️';
-    if (weatherId >= 801 && weatherId < 900) return '☁️';
-    return '🌤️';
+    if (weatherId >= 200 && weatherId < 300) return <WiThunderstorm />;
+    if (weatherId >= 300 && weatherId < 400) return <WiRain />;
+    if (weatherId >= 500 && weatherId < 600) return <WiRain />;
+    if (weatherId >= 600 && weatherId < 700) return <WiSnow />;
+    if (weatherId >= 700 && weatherId < 800) return <WiFog />;
+    if (weatherId === 800) return <WiDaySunny />;
+    if (weatherId >= 801 && weatherId < 900) return <WiCloudy />;
+    return <WiDayCloudy />;
   };
 
   const formatDate = (timestamp) => {
@@ -180,7 +181,7 @@ function ForecastDisplay({ data, unit }) {
   return (
     <div className="forecast-display">
       <div className="forecast-header">
-        <h3>📅 5-Day Weather Forecast</h3>
+        <h3>5-Day Weather Forecast</h3>
         <p className="forecast-subtitle">Daily weather predictions for the next 5 days</p>
       </div>
       
@@ -215,24 +216,24 @@ function ForecastDisplay({ data, unit }) {
             
             <div className="forecast-details">
               <div className="forecast-detail">
-                <span className="detail-label">💧 Humidity</span>
+                <span className="detail-label"><WiHumidity /> Humidity</span>
                 <span className="detail-value">{day.data.humidity}%</span>
               </div>
               <div className="forecast-detail">
-                <span className="detail-label">💨 Wind</span>
+                <span className="detail-label"><WiStrongWind /> Wind</span>
                 <span className="detail-value">{day.data.wind_speed} {unit === 'metric' ? 'm/s' : 'mph'}</span>
               </div>
               <div className="forecast-detail">
-                <span className="detail-label">🌡️ Feels Like</span>
+                <span className="detail-label"><WiThermometer /> Feels Like</span>
                 <span className="detail-value">{day.data.feels_like_avg}{getTemperatureUnit()}</span>
               </div>
               <div className="forecast-detail">
-                <span className="detail-label">📊 Pressure</span>
+                <span className="detail-label"><WiBarometer /> Pressure</span>
                 <span className="detail-value">{day.data.pressure} hPa</span>
               </div>
               {day.data.pop > 0 && (
                 <div className="forecast-detail">
-                  <span className="detail-label">🌧️ Rain Chance</span>
+                  <span className="detail-label"><WiUmbrella /> Rain Chance</span>
                   <span className="detail-value">{Math.round(day.data.pop * 100)}%</span>
                 </div>
               )}

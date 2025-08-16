@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { WiDaySunny, WiDayCloudy, WiCloudy, WiRain, WiDayRain, WiThunderstorm, WiSnow, WiFog, WiDayCloudyGusts } from 'react-icons/wi';
 import './HourlyForecast.css';
 
 const HourlyForecast = ({ location, recordId }) => {
@@ -80,19 +81,19 @@ const HourlyForecast = ({ location, recordId }) => {
 
   const getWeatherIcon = (weatherCode) => {
     const iconMap = {
-      '01': '☀️', 
-      '02': '⛅', 
-      '03': '☁️', 
-      '04': '☁️', 
-      '09': '🌧️', 
-      '10': '🌦️', 
-      '11': '⛈️', 
-      '13': '🌨️', 
-      '50': '🌫️', 
+      '01': <WiDaySunny />, 
+      '02': <WiDayCloudy />, 
+      '03': <WiCloudy />, 
+      '04': <WiCloudy />, 
+      '09': <WiRain />, 
+      '10': <WiDayRain />, 
+      '11': <WiThunderstorm />, 
+      '13': <WiSnow />, 
+      '50': <WiFog />, 
     };
     
     const code = weatherCode.toString().substring(0, 2);
-    return iconMap[code] || '🌤️';
+    return iconMap[code] || <WiDayCloudyGusts />;
   };
 
   if (loading) {

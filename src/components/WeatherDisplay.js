@@ -1,17 +1,17 @@
 import React from 'react';
-import { WiHumidity, WiStrongWind, WiBarometer, WiUmbrella, WiSunrise, WiSunset } from 'react-icons/wi';
+import { WiHumidity, WiStrongWind, WiBarometer, WiUmbrella, WiSunrise, WiSunset, WiThunderstorm, WiRain, WiSnow, WiFog, WiDaySunny, WiCloudy, WiDayCloudy } from 'react-icons/wi';
 import './WeatherDisplay.css';
 
 function WeatherDisplay({ data, unit, onUnitToggle }) {
   const getWeatherIcon = (weatherId) => {
-    if (weatherId >= 200 && weatherId < 300) return '⛈️';
-    if (weatherId >= 300 && weatherId < 400) return '🌧️';
-    if (weatherId >= 500 && weatherId < 600) return '🌧️';
-    if (weatherId >= 600 && weatherId < 700) return '❄️';
-    if (weatherId >= 700 && weatherId < 800) return '🌫️';
-    if (weatherId === 800) return '☀️';
-    if (weatherId >= 801 && weatherId < 900) return '☁️';
-    return '🌤️';
+    if (weatherId >= 200 && weatherId < 300) return <WiThunderstorm />;
+    if (weatherId >= 300 && weatherId < 400) return <WiRain />;
+    if (weatherId >= 500 && weatherId < 600) return <WiRain />;
+    if (weatherId >= 600 && weatherId < 700) return <WiSnow />;
+    if (weatherId >= 700 && weatherId < 800) return <WiFog />;
+    if (weatherId === 800) return <WiDaySunny />;
+    if (weatherId >= 801 && weatherId < 900) return <WiCloudy />;
+    return <WiDayCloudy />;
   };
 
   const formatTime = (timestamp) => {

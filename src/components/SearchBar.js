@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { MdLocationOn, MdSearch } from 'react-icons/md';
 import './SearchBar.css';
 
 const SearchBar = ({ onSearch }) => {
@@ -240,10 +241,10 @@ const SearchBar = ({ onSearch }) => {
             className="location-button"
             title="Use my current location"
           >
-            📍
+            <MdLocationOn />
           </button>
           <button type="submit" className="search-button">
-            🔍
+            <MdSearch />
           </button>
         </div>
       </form>
