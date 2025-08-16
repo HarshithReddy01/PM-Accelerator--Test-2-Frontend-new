@@ -505,26 +505,26 @@ function WeatherPage() {
                 className={`nav-button ${activeSection === 'today' ? 'active' : ''}`}
                 onClick={() => setActiveSection('today')}
               >
-                🌤️ Today's Weather
+                Today's Weather
               </button>
 
               <button 
                 className={`nav-button ${activeSection === 'forecast' ? 'active' : ''}`}
                 onClick={() => setActiveSection('forecast')}
               >
-                📅 5-Day Forecast
+                5-Day Forecast
               </button>
               <button 
                 className={`nav-button ${activeSection === 'videos' ? 'active' : ''}`}
                 onClick={() => setActiveSection('videos')}
               >
-                🎥 Location Videos
+                Location Videos
               </button>
               <button 
                 className={`nav-button ${activeSection === 'places' ? 'active' : ''}`}
                 onClick={() => setActiveSection('places')}
               >
-                📍 Nearby Places
+                Nearby Places
               </button>
             </nav>
 
