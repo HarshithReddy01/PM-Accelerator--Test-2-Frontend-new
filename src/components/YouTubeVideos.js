@@ -40,9 +40,9 @@ const YouTubeVideos = ({ location }) => {
       try {
         console.log('🎬 Fetching YouTube videos for location:', location);
         
-        // Use the new direct endpoint - much faster!
+        // Use the backend endpoint
         const encodedLocation = encodeURIComponent(location);
-        const apiUrl = `http://localhost:5000/api/youtube/direct/${encodedLocation}`;
+        const apiUrl = `http://localhost:5000/api/youtube/${encodedLocation}`;
         console.log('🎬 API URL:', apiUrl);
         
         const videosResponse = await fetch(
@@ -68,6 +68,7 @@ const YouTubeVideos = ({ location }) => {
         
         const videoList = videosData.videos || [];
         console.log('🎬 Video list length:', videoList.length);
+        console.log('🎬 First video structure:', videoList[0]);
         setVideos(videoList);
         
         // Cache the results for 5 minutes
@@ -114,7 +115,7 @@ const YouTubeVideos = ({ location }) => {
         <div className="youtube-loading">
           <div className="youtube-spinner"></div>
           <div className="loading-text">
-            <span>Loading videos for {location}...</span>
+            <span>Loading weather videos for {location}...</span>
             <small>This should take just a few seconds</small>
           </div>
         </div>
@@ -124,19 +125,19 @@ const YouTubeVideos = ({ location }) => {
 
   if (error) {
     return (
-      <div className="youtube-videos-container">
-        <h3>Location Videos</h3>
-        <div className="youtube-error">{error}</div>
-      </div>
+          <div className="youtube-videos-container">
+      <h3>Location Videos</h3>
+      <div className="youtube-error">Unable to load location videos for this location: {error}</div>
+    </div>
     );
   }
 
   if (videos.length === 0) {
     return (
-      <div className="youtube-videos-container">
-        <h3>Location Videos</h3>
-        <div className="youtube-no-videos">Loading...</div>
-      </div>
+          <div className="youtube-videos-container">
+      <h3>Location Videos</h3>
+      <div className="youtube-no-videos">Loading location videos...</div>
+    </div>
     );
   }
 
@@ -145,8 +146,31 @@ const YouTubeVideos = ({ location }) => {
       <h3>Location Videos</h3>
       <div className="youtube-videos-grid">
         {videos.map((video) => {
+          // Handle both backend simplified structure and original YouTube API structure
           const videoId = video.id?.videoId || video.id;
           const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+          
+          // Get video details with fallbacks for different response structures
+          const title = video.title || video.snippet?.title || 'Untitled Video';
+          const description = video.description || video.snippet?.description || '';
+          const channelTitle = video.channel_title || video.snippet?.channelTitle || 'Unknown Channel';
+          const publishedAt = video.published_at || video.snippet?.publishedAt || new Date().toISOString();
+          
+          // Handle thumbnail with fallbacks
+          let thumbnailUrl = '';
+          if (video.thumbnail) {
+            // Backend simplified structure
+            thumbnailUrl = video.thumbnail;
+          } else if (video.snippet?.thumbnails?.medium?.url) {
+            // Original YouTube API structure
+            thumbnailUrl = video.snippet.thumbnails.medium.url;
+          } else if (video.snippet?.thumbnails?.default?.url) {
+            // Fallback to default thumbnail
+            thumbnailUrl = video.snippet.thumbnails.default.url;
+          } else {
+            // Default placeholder
+            thumbnailUrl = 'https://via.placeholder.com/320x180/ff0000/ffffff?text=No+Thumbnail';
+          }
           
           const handleVideoClick = () => {
             console.log('Video clicked:', videoUrl);
@@ -163,26 +187,29 @@ const YouTubeVideos = ({ location }) => {
             <div key={videoId} className="youtube-video-card">
               <div className="video-thumbnail" onClick={handleVideoClick}>
                 <img 
-                  src={video.snippet.thumbnails.medium.url} 
-                  alt={video.snippet.title}
+                  src={thumbnailUrl} 
+                  alt={title}
                   loading="lazy"
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/320x180/ff0000/ffffff?text=Error+Loading+Image';
+                  }}
                 />
                 <div className="play-button">▶</div>
               </div>
               <div className="video-info">
                 <h4 
                   className="video-title" 
-                  title={video.snippet.title}
+                  title={title}
                   onClick={handleVideoClick}
                   style={{ cursor: 'pointer' }}
                 >
-                  {video.snippet.title.length > 50 
-                    ? video.snippet.title.substring(0, 50) + '...' 
-                    : video.snippet.title}
+                  {title.length > 50 
+                    ? title.substring(0, 50) + '...' 
+                    : title}
                 </h4>
-                <p className="video-channel">{video.snippet.channelTitle}</p>
+                <p className="video-channel">{channelTitle}</p>
                 <p className="video-published">
-                  {new Date(video.snippet.publishedAt).toLocaleDateString()}
+                  {new Date(publishedAt).toLocaleDateString()}
                 </p>
                 <button 
                   className="watch-video-btn"

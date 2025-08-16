@@ -26,7 +26,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
     
     try {
       console.log(`🔍 Fetching nearby ${placeType}s for coordinates: ${latitude}, ${longitude}`);
-      const apiUrl = `http://localhost:5000/api/nearby/${placeType}?lat=${latitude}&lon=${longitude}`;
+      const apiUrl = `http://localhost:5000/api/places/nearby?lat=${latitude}&lon=${longitude}&type=${placeType}`;
       console.log(`🌐 API URL: ${apiUrl}`);
       
       // Add timeout to prevent long loading
@@ -98,11 +98,28 @@ const NearbyPlaces = ({ latitude, longitude }) => {
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name || '')}`;
   };
 
-  const getPhotoUrl = (photos) => {
-    if (photos && photos.length > 0) {
-      const photoRef = photos[0].photo_reference;
-      // Use backend proxy to avoid CORS issues
-      return `http://localhost:5000/api/places/photo?photo_reference=${photoRef}&max_width=400`;
+  const getPhotoUrl = (place) => {
+    // First, try to use the photo_url provided by the backend
+    if (place.photo_url) {
+      return place.photo_url;
+    }
+    
+    // Fallback: construct URL from photos array
+    if (place.photos && place.photos.length > 0) {
+      const photoRef = place.photos[0].photo_reference;
+      // For mock photos, return placeholder directly
+      if (photoRef.startsWith('mock_photo_')) {
+        const photoNumber = photoRef.split('_')[-1];
+        return `https://via.placeholder.com/400x300/4A90E2/ffffff?text=Place+Photo+${photoNumber}`;
+      }
+      // For real photos, use direct Google Places Photo API URL
+      const apiKey = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
+      if (apiKey) {
+        return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoRef}&key=${process.env.REACT_APP_GOOGLE_PLACES_API_KEY}`;
+      } else {
+        console.warn('Google Places API key not found in environment variables');
+        return null;
+      }
     }
     return null;
   };
@@ -123,7 +140,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
   };
 
   const renderPlaceCard = (place) => {
-    const photoUrl = getPhotoUrl(place.photos);
+    const photoUrl = getPhotoUrl(place);
     const mapsUrl = getPlaceGoogleMapsUrl(place);
     const openStatus = isOpenNow(place.opening_hours);
     
@@ -140,8 +157,12 @@ const NearbyPlaces = ({ latitude, longitude }) => {
               alt={place.name} 
               loading="lazy"
               onError={(e) => {
+                console.log('Image failed to load:', photoUrl);
                 e.target.style.display = 'none';
                 e.target.nextSibling.style.display = 'block';
+              }}
+              onLoad={(e) => {
+                console.log('Image loaded successfully:', photoUrl);
               }}
             />
           ) : null}
@@ -174,8 +195,8 @@ const NearbyPlaces = ({ latitude, longitude }) => {
             )}
           </div>
           
-          {place.formatted_address && (
-            <div className="place-address">{place.formatted_address}</div>
+          {(place.formatted_address || place.address) && (
+            <div className="place-address">{place.formatted_address || place.address}</div>
           )}
           
           <div className="place-actions">
@@ -249,7 +270,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
       <div className="map-section">
         <div className="map-container">
           <iframe
-                            src={`https://www.google.com/maps/embed/v1/view?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&center=${latitude},${longitude}&zoom=14&maptype=roadmap`}
+            src={`https://maps.google.com/maps?q=${latitude},${longitude}&z=14&output=embed`}
             width="100%"
             height="300"
             style={{ border: 0 }}
@@ -310,7 +331,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
         ) : (
           <>
             <div className="places-content-header">
-              <p>Showing top {places.length} {activeTab}s by number of reviews</p>
+              <p>Showing top {places.length} {activeTab}s by number of reviews (sorted by prominence)</p>
             </div>
             <div className="places-grid">
               {places.map(renderPlaceCard)}
