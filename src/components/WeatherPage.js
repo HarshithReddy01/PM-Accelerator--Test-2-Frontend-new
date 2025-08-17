@@ -72,12 +72,12 @@ function WeatherPage() {
 
   const fetchTodaysWeather = useCallback(async (lat, lon, locationName) => {
     try {
-      const todayUrl = `http://3.110.152.13/api/today/${encodeURIComponent(locationName)}`;
+      const todayUrl = `https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/today/${encodeURIComponent(locationName)}`;
       
       let response = await fetch(todayUrl);
       
       if (!response.ok) {
-        const coordUrl = `http://3.110.152.13/api/today/coordinates?lat=${lat}&lon=${lon}`;
+        const coordUrl = `https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/today/coordinates?lat=${lat}&lon=${lon}`;
         
         response = await fetch(coordUrl);
         

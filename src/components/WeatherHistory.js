@@ -39,7 +39,7 @@ const WeatherHistory = () => {
   const fetchRecords = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://3.110.152.13/api/weather');
+      const response = await fetch('https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/weather');
       if (response.ok) {
         const data = await response.json();
         setRecords(data.records || []);
@@ -60,7 +60,7 @@ const WeatherHistory = () => {
   const deleteRecord = async (id) => {
     if (window.confirm('Are you sure you want to delete this record?')) {
       try {
-        const response = await fetch(`http://3.110.152.13/api/weather/${id}`, {
+        const response = await fetch(`https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/weather/${id}`, {
           method: 'DELETE'
         });
         if (response.ok) {
@@ -90,7 +90,7 @@ const WeatherHistory = () => {
 
   const updateRecord = async (id) => {
     try {
-      const response = await fetch(`http://3.110.152.13/api/weather/${id}`, {
+      const response = await fetch(`https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/weather/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -118,7 +118,7 @@ const WeatherHistory = () => {
     try {
       setError(null);
       console.log(`Attempting to export ${format}...`);
-      const response = await fetch(`http://3.110.152.13/api/export/${format}`);
+      const response = await fetch(`https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/export/${format}`);
       
       console.log(`Response status: ${response.status}`);
       console.log(`Response headers:`, response.headers);
@@ -155,7 +155,7 @@ const WeatherHistory = () => {
 
     try {
       setLoading(true);
-      const response = await fetch('http://3.110.152.13/api/weather/clear-all', {
+      const response = await fetch('https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/weather/clear-all', {
         method: 'DELETE'
       });
       

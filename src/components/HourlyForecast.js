@@ -31,7 +31,7 @@ const HourlyForecast = ({ location, recordId }) => {
         let response;
         
         if (recordId) {
-          response = await fetch(`http://3.110.152.13/api/hourly/${recordId}?date=${selectedDate}`);
+          response = await fetch(`https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/hourly/${recordId}?date=${selectedDate}`);
         } else {
           const geocodeResponse = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(location)}&limit=1&appid=${process.env.REACT_APP_WEATHER_API_KEY}`);
           
@@ -46,7 +46,7 @@ const HourlyForecast = ({ location, recordId }) => {
           
           const { lat, lon } = geocodeData[0];
           
-          response = await fetch(`http://3.110.152.13/api/hourly/direct?lat=${lat}&lon=${lon}`);
+          response = await fetch(`https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/hourly/direct?lat=${lat}&lon=${lon}`);
         }
 
         console.log('Hourly forecast response status:', response.status);
