@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MdLocationOn, MdSearch } from 'react-icons/md';
+import config from '../config.js';
 import './SearchBar.css';
 
 const SearchBar = ({ onSearch }) => {
@@ -39,10 +40,10 @@ const SearchBar = ({ onSearch }) => {
       setIsLoadingSuggestions(true);
       
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&addressdetails=1`,
+        `${config.NOMINATIM_URL}/search?q=${encodeURIComponent(query)}&format=json&limit=5&addressdetails=1`,
         {
           headers: {
-            'User-Agent': 'WeatherApp/1.0 (https://github.com/yourusername/weatherapp)'
+            'User-Agent': 'WeatherApp/1.0 (Local Development)'
           }
         }
       );

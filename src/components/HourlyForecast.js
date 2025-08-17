@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { WiDaySunny, WiDayCloudy, WiCloudy, WiRain, WiDayRain, WiThunderstorm, WiSnow, WiFog, WiDayCloudyGusts } from 'react-icons/wi';
+import config from '../config.js';
 import './HourlyForecast.css';
 
 const HourlyForecast = ({ location, recordId }) => {
@@ -31,9 +32,9 @@ const HourlyForecast = ({ location, recordId }) => {
         let response;
         
         if (recordId) {
-          response = await fetch(`https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/hourly/${recordId}?date=${selectedDate}`);
+          response = await fetch(`${config.API_BASE_URL}/api/hourly/${recordId}?date=${selectedDate}`);
         } else {
-          const geocodeResponse = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(location)}&limit=1&appid=${process.env.REACT_APP_WEATHER_API_KEY}`);
+          const geocodeResponse = await fetch(`${config.OPENWEATHER_GEO_URL}/direct?q=${encodeURIComponent(location)}&limit=1&appid=${process.env.REACT_APP_WEATHER_API_KEY}`);
           
           if (!geocodeResponse.ok) {
             throw new Error('Failed to get location coordinates');
@@ -46,7 +47,7 @@ const HourlyForecast = ({ location, recordId }) => {
           
           const { lat, lon } = geocodeData[0];
           
-          response = await fetch(`https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/hourly/direct?lat=${lat}&lon=${lon}`);
+          response = await fetch(`${config.API_BASE_URL}/api/hourly/direct?lat=${lat}&lon=${lon}`);
         }
 
         console.log('Hourly forecast response status:', response.status);
@@ -117,14 +118,12 @@ const HourlyForecast = ({ location, recordId }) => {
       .map(hour => {
         let hourTime;
         if (hour.time) {
-          // Handle time format like "14:00" or "2:00 PM"
           const timeStr = hour.time;
           if (timeStr.includes(':')) {
             const [hours, minutes] = timeStr.split(':').map(Number);
             hourTime = new Date(selectedDate);
             hourTime.setHours(hours, minutes, 0, 0);
           } else {
-            // Fallback for other time formats
             hourTime = new Date(selectedDate);
           }
         } else if (hour.dt_txt) {
@@ -141,7 +140,7 @@ const HourlyForecast = ({ location, recordId }) => {
         };
       })
       .filter(hour => !hour.isPast) 
-      .slice(0, 24); // Show max 24 upcoming hours
+      .slice(0, 24);
   };
 
   if (loading) {

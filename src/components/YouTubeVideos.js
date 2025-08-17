@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import config from '../config.js';
 import './YouTubeVideos.css';
 
 const YouTubeVideos = ({ location }) => {
@@ -35,7 +36,7 @@ const YouTubeVideos = ({ location }) => {
       try {
         console.log('🎬 Fetching YouTube videos for location:', location);
         const encodedLocation = encodeURIComponent(location);
-        const apiUrl = `https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/youtube/${encodedLocation}`;
+        const apiUrl = `${config.API_BASE_URL}/api/youtube/${encodedLocation}`;
         console.log('🎬 API URL:', apiUrl);
         
         const videosResponse = await fetch(
@@ -134,7 +135,7 @@ const YouTubeVideos = ({ location }) => {
       <div className="youtube-videos-grid">
         {videos.map((video) => {
           const videoId = video.id?.videoId || video.id;
-          const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+          const videoUrl = `${config.YOUTUBE_URL}/watch?v=${videoId}`;
           const title = video.title || video.snippet?.title || 'Untitled Video';
           const description = video.description || video.snippet?.description || '';
           const channelTitle = video.channel_title || video.snippet?.channelTitle || 'Unknown Channel';
@@ -147,7 +148,7 @@ const YouTubeVideos = ({ location }) => {
           } else if (video.snippet?.thumbnails?.default?.url) {
             thumbnailUrl = video.snippet.thumbnails.default.url;
           } else {
-            thumbnailUrl = 'https://via.placeholder.com/320x180/ff0000/ffffff?text=No+Thumbnail';
+            thumbnailUrl = `${config.PLACEHOLDER_URL}/320x180/ff0000/ffffff?text=No+Thumbnail`;
           }
           
           const handleVideoClick = () => {
@@ -168,7 +169,7 @@ const YouTubeVideos = ({ location }) => {
                   alt={title}
                   loading="lazy"
                   onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/320x180/ff0000/ffffff?text=Error+Loading+Image';
+                    e.target.src = `${config.PLACEHOLDER_URL}/320x180/ff0000/ffffff?text=Error+Loading+Image`;
                   }}
                 />
                 <div className="play-button">▶</div>

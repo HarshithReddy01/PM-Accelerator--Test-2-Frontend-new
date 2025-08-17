@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import config from '../config.js';
 import './SaveWeather.css';
 
 const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => {
@@ -69,7 +70,7 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
     setLoading(true);
     
     try {
-      const response = await fetch('https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/weather', {
+      const response = await fetch(`${config.API_BASE_URL}/api/weather`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -117,7 +118,7 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
       const today = new Date().toISOString().split('T')[0];
       const fiveDaysFromNow = new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
       
-      const response = await fetch('https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/weather', {
+      const response = await fetch(`${config.API_BASE_URL}/api/weather`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

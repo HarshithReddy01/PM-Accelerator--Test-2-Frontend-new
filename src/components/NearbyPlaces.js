@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MdRestaurant, MdLocalHospital, MdHotel, MdDirections, MdMap, MdPhone, MdLanguage } from 'react-icons/md';
+import config from '../config';
 import './NearbyPlaces.css';
 
 const NearbyPlaces = ({ latitude, longitude }) => {
@@ -27,7 +28,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
     
     try {
       console.log(`🔍 Fetching nearby ${placeType}s for coordinates: ${latitude}, ${longitude}`);
-      const apiUrl = `https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/places/nearby?lat=${latitude}&lon=${longitude}&type=${placeType}`;
+      const apiUrl = `${config.API_BASE_URL}/api/places/nearby?lat=${latitude}&lon=${longitude}&type=${placeType}`;
       console.log(` API URL: ${apiUrl}`);
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000); 
@@ -67,7 +68,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
   };
 
   const getGoogleMapsUrl = () => {
-    const baseUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+    const baseUrl = `${config.GOOGLE_MAPS_URL}/maps/search/?api=1&query=${latitude},${longitude}`;
     const allPlacesList = [
       ...allPlaces.restaurant.map(p => ({ ...p, type: 'restaurant' })),
       ...allPlaces.hospital.map(p => ({ ...p, type: 'hospital' })),
@@ -88,9 +89,9 @@ const NearbyPlaces = ({ latitude, longitude }) => {
     if (place.geometry && place.geometry.location) {
       const lat = place.geometry.location.lat;
       const lng = place.geometry.location.lng;
-      return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+      return `${config.GOOGLE_MAPS_URL}/maps/search/?api=1&query=${lat},${lng}`;
     }
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name || '')}`;
+    return `${config.GOOGLE_MAPS_URL}/maps/search/?api=1&query=${encodeURIComponent(place.name || '')}`;
   };
 
   const getPhotoUrl = (place) => {
@@ -102,11 +103,11 @@ const NearbyPlaces = ({ latitude, longitude }) => {
       const photoRef = place.photos[0].photo_reference;
       if (photoRef.startsWith('mock_photo_')) {
         const photoNumber = photoRef.split('_')[-1];
-        return `https://via.placeholder.com/400x300/4A90E2/ffffff?text=Place+Photo+${photoNumber}`;
+        return `${config.PLACEHOLDER_URL}/400x300/4A90E2/ffffff?text=Place+Photo+${photoNumber}`;
       }
       const apiKey = process.env.REACT_APP_GOOGLE_PLACES_API_KEY;
       if (apiKey) {
-        return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoRef}&key=${process.env.REACT_APP_GOOGLE_PLACES_API_KEY}`;
+        return `${config.GOOGLE_PLACES_URL}/maps/api/place/photo?maxwidth=400&photoreference=${photoRef}&key=${process.env.REACT_APP_GOOGLE_PLACES_API_KEY}`;
       } else {
         console.warn('Google Places API key not found in environment variables');
         return null;
@@ -258,7 +259,7 @@ const NearbyPlaces = ({ latitude, longitude }) => {
       <div className="map-section">
         <div className="map-container">
           <iframe
-            src={`https://maps.google.com/maps?q=${latitude},${longitude}&z=14&output=embed`}
+            src={`${config.GOOGLE_MAPS_URL}/maps?q=${latitude},${longitude}&z=14&output=embed`}
             width="100%"
             height="300"
             style={{ border: 0 }}

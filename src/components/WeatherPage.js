@@ -9,6 +9,7 @@ import ErrorMessage from './ErrorMessage';
 import YouTubeVideos from './YouTubeVideos';
 import SaveWeather from './SaveWeather';
 import NearbyPlaces from './NearbyPlaces';
+import config from '../config.js';
 import './WeatherPage.css';
 
 const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
@@ -29,7 +30,6 @@ function WeatherPage() {
   const navigate = useNavigate();
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState(null);
-  const [hourlyData, setHourlyData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [unit, setUnit] = useState('metric');
@@ -70,81 +70,9 @@ function WeatherPage() {
     }
   }, [unit]);
 
-  const fetchTodaysWeather = useCallback(async (lat, lon, locationName) => {
-    try {
-      const todayUrl = `https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/today/${encodeURIComponent(locationName)}`;
-      
-      let response = await fetch(todayUrl);
-      
-      if (!response.ok) {
-        const coordUrl = `https://jte9rqvux8.execute-api.ap-south-1.amazonaws.com/api/today/coordinates?lat=${lat}&lon=${lon}`;
-        
-        response = await fetch(coordUrl);
-        
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('🌤️ Today\'s weather API error:', errorText);
-          throw new Error(`Could not get today's weather data: ${response.status} - ${errorText}`);
-        }
-      }
-      
-      const data = await response.json();
-      
-      if (data.weather_data && data.weather_data.hourly_forecasts) {
-        
-        const hourlyList = data.weather_data.hourly_forecasts.map(forecast => ({
-          dt: forecast.timestamp,
-          temp: forecast.temperature,
-          feels_like: forecast.feels_like,
-          pressure: forecast.pressure,
-          humidity: forecast.humidity,
-          weather: [{
-            id: getWeatherIdFromDescription(forecast.weather_description),
-            description: forecast.weather_description,
-            main: forecast.weather_main
-          }],
-          wind: {
-            speed: forecast.wind_speed,
-            deg: forecast.wind_deg
-          },
-          clouds: { all: forecast.clouds },
-          pop: forecast.pop,
-          visibility: forecast.visibility,
-          dt_txt: forecast.datetime
-        }));
-        
-        const hourlyData = {
-          hourly: hourlyList,
-          timezone: 'local',
-          timezone_offset: 0,
-          note: 'Using 3-hour intervals from OpenWeather Free Forecast API',
-          current_weather: data.weather_data.current_weather,
-          today_summary: data.weather_data.today_summary
-        };
-        
-        setHourlyData(hourlyData);
 
-      } else {
-        console.error('🌤️ No hourly forecasts in response');
-        setHourlyData(null);
-      }
-    } catch (err) {
-      console.error('🌤️ Today\'s weather error:', err);
-      setHourlyData(null);
-    }
-  }, []);
 
-  const getWeatherIdFromDescription = (description) => {
-    const desc = description.toLowerCase();
-    if (desc.includes('thunderstorm')) return 200;
-    if (desc.includes('drizzle')) return 300;
-    if (desc.includes('rain')) return 500;
-    if (desc.includes('snow')) return 600;
-    if (desc.includes('mist') || desc.includes('fog')) return 700;
-    if (desc.includes('clear')) return 800;
-    if (desc.includes('cloud')) return 801;
-    return 800; 
-  };
+
 
   const fetchWeatherData = useCallback(async (query) => {
     if (!API_KEY) {
@@ -218,8 +146,7 @@ function WeatherPage() {
              setWeatherData(data);
              const forecastLat = data.coord.lat;
              const forecastLon = data.coord.lon;
-             await fetchForecastData(forecastLat, forecastLon);
-             await fetchTodaysWeather(forecastLat, forecastLon, data.name);
+                           await fetchForecastData(forecastLat, forecastLon);
     } catch (err) {
       console.error('Error in fetchWeatherData:', err);
               setError(err.message);
@@ -229,7 +156,7 @@ function WeatherPage() {
       } finally {
       setLoading(false);
     }
-  }, [unit, fetchForecastData, fetchTodaysWeather]);
+     }, [unit, fetchForecastData]);
 
   useEffect(() => {
     if (location) {
@@ -252,8 +179,8 @@ function WeatherPage() {
       } else {
         fetchWeatherData(decodedLocation);
       }
-    }
-  }, [location, fetchWeatherData, fetchTodaysWeather]);
+         }
+   }, [location, fetchWeatherData]);
 
   const handleBackClick = () => {
     navigate('/');
@@ -265,153 +192,18 @@ function WeatherPage() {
     setUnit(prevUnit => prevUnit === 'metric' ? 'imperial' : 'metric');
   };
 
-  const testHourlyData = async () => {
-    if (weatherData && weatherData.coord) {
-      console.log('🧪 Testing today\'s weather fetch...');
-      await fetchTodaysWeather(weatherData.coord.lat, weatherData.coord.lon, weatherData.name);
-    }
-  };
+
 
   const renderSection = () => {
     switch (activeSection) {
       case 'today':
-        return (
-          <div className="section-content">
-            <div className="current-weather-section">
-              <WeatherDisplay data={weatherData} unit={unit} onUnitToggle={handleUnitToggle} />
-            </div>
-            {(hourlyData || forecastData) && (
-              <div className="hourly-forecast-section">
-                <h3>Next Hours Forecast</h3>
-                
-                {hourlyData && hourlyData.today_summary && (
-                  <div className="today-summary">
-                    <h4>Today's Summary</h4>
-                    <div className="summary-grid">
-                      <div className="summary-item">
-                        <span className="summary-label">Temperature Range:</span>
-                        <span className="summary-value">
-                          {hourlyData.today_summary.temperature_range?.min && 
-                           hourlyData.today_summary.temperature_range?.max ? 
-                           `${Math.round(hourlyData.today_summary.temperature_range.min)}° - ${Math.round(hourlyData.today_summary.temperature_range.max)}°` : 
-                           'N/A'}
-                        </span>
-                      </div>
-                      <div className="summary-item">
-                        <span className="summary-label">Average Temperature:</span>
-                        <span className="summary-value">
-                          {hourlyData.today_summary.temperature_range?.avg ? 
-                           `${Math.round(hourlyData.today_summary.temperature_range.avg)}°` : 
-                           'N/A'}
-                        </span>
-                      </div>
-                      <div className="summary-item">
-                        <span className="summary-label">Humidity Range:</span>
-                        <span className="summary-value">
-                          {hourlyData.today_summary.humidity_range?.min && 
-                           hourlyData.today_summary.humidity_range?.max ? 
-                           `${hourlyData.today_summary.humidity_range.min}% - ${hourlyData.today_summary.humidity_range.max}%` : 
-                           'N/A'}
-                        </span>
-                      </div>
-                      <div className="summary-item">
-                        <span className="summary-label">Most Common Weather:</span>
-                        <span className="summary-value">
-                          {hourlyData.today_summary.most_common_weather || 'Mixed Conditions'}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                <p className="hourly-note">
-                  {hourlyData ? hourlyData.note || 'Showing 3-hour interval forecasts for the next 24 hours' : ''}
-                </p>
-                {console.log('🔍 Debug - hourlyData:', hourlyData)}
-                {console.log('🔍 Debug - forecastData:', forecastData)}
-                <div className="hourly-forecast-grid">
-                  {(() => {
-                    let todayItems = [];
-                    
-                    if (hourlyData && hourlyData.hourly) {
-                      todayItems = hourlyData.hourly;
-                      console.log('Using 3-hour interval data:', todayItems.length, 'items');
-                    } else if (forecastData && forecastData.list) {
-                      todayItems = forecastData.list
-                        .filter(item => {
-                          const itemDate = new Date(item.dt * 1000);
-                          const today = new Date();
-                          return itemDate.toDateString() === today.toDateString();
-                        });
-                      console.log('Using fallback forecast data:', todayItems.length, 'items');
-                    }
-                    
-                    console.log('Today\'s hourly items:', todayItems?.length || 0);
-                    console.log('Today\'s items:', todayItems?.map(item => new Date(item.dt * 1000).toLocaleTimeString()));
-                    
-                    if (!todayItems || todayItems.length === 0) {
-                      return (
-                        <div key="no-data" className="hourly-no-data">
-                          <p>No hourly forecast data available for today.</p>
-                        </div>
-                      );
-                    }
-                    
-                    return todayItems.map((item, index) => {
-                      const time = new Date(item.dt * 1000);
-                      const temp = unit === 'metric' ? 
-                        (item.temp || item.main?.temp) : 
-                        ((item.temp || item.main?.temp) * 9/5) + 32;
-                      const tempUnit = unit === 'metric' ? '°C' : '°F';
-                      const weatherIcon = getWeatherIcon(item.weather[0]?.id);
-                      
-                      return (
-                        <div key={index} className="hourly-forecast-item">
-                          <div className="hourly-time">
-                            {time.toLocaleTimeString('en-US', { 
-                              hour: 'numeric', 
-                              hour12: true 
-                            })}
-                          </div>
-                          <div className="hourly-icon">
-                            {weatherIcon}
-                          </div>
-                          <div className="hourly-temp">
-                            {Math.round(temp)}{tempUnit}
-                          </div>
-                          <div className="hourly-description">
-                            {item.weather[0]?.description || 'Clear'}
-                          </div>
-                          <div className="hourly-details">
-                            <div className="detail-item">
-                              <span className="detail-label">Humidity:</span>
-                              <span className="detail-value">{item.humidity || item.main?.humidity}%</span>
-                            </div>
-                            <div className="detail-item">
-                              <span className="detail-label">Wind:</span>
-                              <span className="detail-value">{Math.round(item.wind_speed || item.wind?.speed)} m/s</span>
-                            </div>
-                            <div className="detail-item">
-                              <span className="detail-label">Feels Like:</span>
-                              <span className="detail-value">
-                                {Math.round(unit === 'metric' ? 
-                                  (item.feels_like || item.main?.feels_like) : 
-                                  ((item.feels_like || item.main?.feels_like) * 9/5) + 32)}{tempUnit}
-                              </span>
-                            </div>
-                            <div className="detail-item">
-                              <span className="detail-label">Rain Chance:</span>
-                              <span className="detail-value">{Math.round((item.pop || 0) * 100)}%</span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    });
-                  })()}
-                </div>
-              </div>
-            )}
-          </div>
-        );
+                 return (
+           <div className="section-content">
+             <div className="current-weather-section">
+               <WeatherDisplay data={weatherData} unit={unit} onUnitToggle={handleUnitToggle} />
+             </div>
+           </div>
+         );
 
       case 'forecast':
         return (
