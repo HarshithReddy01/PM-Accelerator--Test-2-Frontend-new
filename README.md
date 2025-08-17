@@ -6,11 +6,11 @@ A modern, responsive React-based frontend for a comprehensive weather forecastin
 
 ### Core Weather Functionality
 - Real-time weather data display with current conditions
-- Detailed weather forecasts with temperature, humidity, wind speed
-- Hourly weather breakdown for specific dates
+- Detailed weather forecasts with temperature, humidity, and wind speed
 - Location-based weather information
 - Geolocation support for current location weather
-
+- Nearby places recommendations
+  
 ### User Interface
 - Modern, responsive design with video background
 - Interactive search functionality with location suggestions
@@ -48,7 +48,7 @@ frontend/
 ├── public/
 │   ├── index.html
 │   ├── favicon.svg
-│   └── Assests/
+│   └── Assets/
 │       └── naturevideo.mp4
 ├── src/
 │   ├── App.js                 # Main application component
@@ -137,7 +137,7 @@ This will deploy to GitHub Pages (configured in package.json)
 ## Application Features
 
 ### Homepage
-- Video background with nature theme
+- Video background with a nature theme
 - Search bar for location input
 - Current location button with geolocation
 - Navigation to weather pages
@@ -217,7 +217,7 @@ The application uses a centralized configuration file (`src/config.js`):
 ## API Integration
 
 ### Backend Communication
-- RESTful API calls to backend server
+- RESTful API calls to the backend server
 - Error handling and retry logic
 - Loading states during API calls
 - Data caching for performance
@@ -333,4 +333,4 @@ This project is licensed under the MIT License.
 
 ## Support
 
-For support and questions, please contact the development team or create an issue in the repository.
+For support and questions, please contact harshithreddy0117@gmail.com 
