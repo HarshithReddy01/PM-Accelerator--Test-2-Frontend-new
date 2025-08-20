@@ -1,6 +1,6 @@
 
 const config = {
-  API_BASE_URL: process.env.REACT_APP_API_BASE || 'http://localhost:5000',
+  API_BASE_URL: 'https://wther.paninsight.org',
   
   OPENWEATHER_BASE_URL: 'https://api.openweathermap.org/data/2.5',
   OPENWEATHER_GEO_URL: 'https://api.openweathermap.org/geo/1.0',
