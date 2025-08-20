@@ -2,6 +2,12 @@
 
 A modern, responsive React-based frontend for a comprehensive weather forecasting application. This frontend provides an intuitive user interface for accessing weather data, location services, and additional features like nearby places and YouTube content.
 
+## Live Demo
+- **Frontend Deployment**: [https://harshithreddy01.github.io/PM-Accelerator--Test-2-Frontend-new/](https://harshithreddy01.github.io/PM-Accelerator--Test-2-Frontend-new/)
+- **Backend Repository**: [https://github.com/HarshithReddy01/PM-Accelerator--Test-2-Backend](https://github.com/HarshithReddy01/PM-Accelerator--Test-2-Backend)
+
+For all backend functionality, please visit the backend repository linked above.
+
 ## Features
 
 ### Core Weather Functionality
@@ -10,6 +16,7 @@ A modern, responsive React-based frontend for a comprehensive weather forecastin
 - Location-based weather information
 - Geolocation support for current location weather
 - Nearby places recommendations
+- Place review
   
 ### User Interface
 - Modern, responsive design with video background
@@ -81,6 +88,28 @@ frontend/
 - **SaveWeather**: Weather data saving functionality
 - **NearbyPlaces**: Location-based place discovery
 - **YouTubeVideos**: Location-based video content
+
+## Deployment Pipeline
+
+The application follows a complete CI/CD pipeline:
+
+Local Changes → GitHub Commit → Pipeline → Automatic Docker Compose → EC2 Hosting
+
+### Pipeline Flow:
+1. **Local Development**: Make changes to the codebase
+2. **GitHub Commit**: Push changes to GitHub repository
+3. **Automated Pipeline**: GitHub Actions triggers deployment
+4. **Docker Containerization**: Application is containerized using Docker
+5. **EC2 Deployment**: Container is automatically deployed to AWS EC2 instance
+6. **Live Application**: Frontend (GitHub Pages) connects to backend (EC2)
+
+### Technologies Used in Deployment:
+- **Containerization**: Docker with Docker Compose
+- **Cloud Platform**: AWS EC2 for backend hosting
+- **Frontend Hosting**: GitHub Pages
+- **CI/CD**: GitHub Actions for automated deployment
+- **Database**: AWS RDS MySQL Database
+- **Load Balancer**: AWS Application Load Balancer (if configured)
 
 ## Prerequisites
 
@@ -333,4 +362,6 @@ This project is licensed under the MIT License.
 
 ## Support
 
-For support and questions, please contact harshithreddy0117@gmail.com 
+For support and questions, please contact harshithreddy0117@gmail.com
+
+**Personal Website**: [https://harshithreddy01.github.io/My-Web/](https://harshithreddy01.github.io/My-Web/) 
