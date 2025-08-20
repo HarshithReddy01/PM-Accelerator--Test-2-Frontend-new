@@ -9,6 +9,7 @@ const SearchBar = ({ onSearch }) => {
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isClickingSuggestion, setIsClickingSuggestion] = useState(false);
   const searchContainerRef = useRef(null);
 
   useEffect(() => {
@@ -99,7 +100,9 @@ const SearchBar = ({ onSearch }) => {
   const handleSuggestionClick = (suggestion) => {
     console.log('🔍 Selected suggestion:', suggestion);
     
-    console.log('📍 Nominatim coordinates:', suggestion.latitude, suggestion.longitude);
+    setIsClickingSuggestion(true);
+    
+    console.log('Nominatim coordinates:', suggestion.latitude, suggestion.longitude);
     
     const searchData = {
       latitude: suggestion.latitude,
@@ -114,6 +117,11 @@ const SearchBar = ({ onSearch }) => {
     setSuggestions([]);
     setShowSuggestions(false);
     setSelectedIndex(-1);
+    
+    // Reset flag after a short delay
+    setTimeout(() => {
+      setIsClickingSuggestion(false);
+    }, 100);
   };
 
   const handleSubmit = (e) => {
@@ -174,10 +182,12 @@ const SearchBar = ({ onSearch }) => {
   };
 
   const handleInputBlur = () => {
+    if (isClickingSuggestion) return;
+    
     setTimeout(() => {
       setShowSuggestions(false);
       setSelectedIndex(-1);
-    }, 200);
+    }, 300);
   };
 
   const handleClickOutside = (e) => {

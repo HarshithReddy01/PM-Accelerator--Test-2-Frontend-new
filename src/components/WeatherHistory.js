@@ -37,7 +37,9 @@ const WeatherHistory = () => {
   const fetchRecords = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${config.API_BASE_URL}/api/weather`);
+      const response = await fetch(`${config.API_BASE_URL}/api/weather`, {
+        credentials: 'include'
+      });
       if (response.ok) {
         const data = await response.json();
         setRecords(data.records || []);
@@ -59,7 +61,8 @@ const WeatherHistory = () => {
     if (window.confirm('Are you sure you want to delete this record?')) {
       try {
         const response = await fetch(`${config.API_BASE_URL}/api/weather/${id}`, {
-          method: 'DELETE'
+          method: 'DELETE',
+          credentials: 'include'
         });
         if (response.ok) {
           setRecords(records.filter(record => record.id !== id));
@@ -93,7 +96,8 @@ const WeatherHistory = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(editForm)
+        body: JSON.stringify(editForm),
+        credentials: 'include'
       });
       
       if (response.ok) {
@@ -116,7 +120,9 @@ const WeatherHistory = () => {
     try {
       setError(null);
       console.log(`Attempting to export ${format}...`);
-      const response = await fetch(`${config.API_BASE_URL}/api/export/${format}`);
+      const response = await fetch(`${config.API_BASE_URL}/api/export/${format}`, {
+        credentials: 'include'
+      });
       
       console.log(`Response status: ${response.status}`);
       console.log(`Response headers:`, response.headers);
@@ -153,9 +159,10 @@ const WeatherHistory = () => {
 
     try {
       setLoading(true);
-      const response = await fetch(`${config.API_BASE_URL}/api/weather/clear-all`, {
-        method: 'DELETE'
-      });
+              const response = await fetch(`${config.API_BASE_URL}/api/weather/clear-all`, {
+          method: 'DELETE',
+          credentials: 'include'
+        });
       
              if (response.ok) {
          setRecords([]);

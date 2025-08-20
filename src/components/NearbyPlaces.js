@@ -33,7 +33,10 @@ const NearbyPlaces = ({ latitude, longitude }) => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000); 
       
-      const response = await fetch(apiUrl, { signal: controller.signal });
+      const response = await fetch(apiUrl, { 
+        signal: controller.signal,
+        credentials: 'include'
+      });
       clearTimeout(timeoutId);
       
       console.log(`📡 Response status: ${response.status}`);

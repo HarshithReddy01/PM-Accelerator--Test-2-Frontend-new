@@ -75,7 +75,8 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
+        credentials: 'include'
       });
       
       if (response.ok) {
@@ -127,7 +128,8 @@ const SaveWeather = ({ currentLocation, currentWeatherData, onSaveSuccess }) => 
           location: currentLocation,
           start_date: today,
           end_date: fiveDaysFromNow
-        })
+        }),
+        credentials: 'include'
       });
       
       if (response.ok) {

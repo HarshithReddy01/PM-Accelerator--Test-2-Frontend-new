@@ -45,7 +45,8 @@ const YouTubeVideos = ({ location }) => {
             signal: abortControllerRef.current.signal,
             headers: {
               'Content-Type': 'application/json',
-            }
+            },
+            credentials: 'include'
           }
         );
         

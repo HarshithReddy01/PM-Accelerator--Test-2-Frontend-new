@@ -32,7 +32,9 @@ const HourlyForecast = ({ location, recordId }) => {
         let response;
         
         if (recordId) {
-          response = await fetch(`${config.API_BASE_URL}/api/hourly/${recordId}?date=${selectedDate}`);
+          response = await fetch(`${config.API_BASE_URL}/api/hourly/${recordId}?date=${selectedDate}`, {
+            credentials: 'include'
+          });
         } else {
           const geocodeResponse = await fetch(`${config.OPENWEATHER_GEO_URL}/direct?q=${encodeURIComponent(location)}&limit=1&appid=${process.env.REACT_APP_WEATHER_API_KEY}`);
           
@@ -47,7 +49,9 @@ const HourlyForecast = ({ location, recordId }) => {
           
           const { lat, lon } = geocodeData[0];
           
-          response = await fetch(`${config.API_BASE_URL}/api/hourly/direct?lat=${lat}&lon=${lon}`);
+          response = await fetch(`${config.API_BASE_URL}/api/hourly/direct?lat=${lat}&lon=${lon}`, {
+            credentials: 'include'
+          });
         }
 
         console.log('Hourly forecast response status:', response.status);
