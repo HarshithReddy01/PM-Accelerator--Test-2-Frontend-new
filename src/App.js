@@ -66,7 +66,7 @@ function HomePage() {
             rel="noopener noreferrer"
             className="pm-accelerator-link"
           >
-            <span className="desktop-text">Crafted by Harshith Reddy</span>
+            <span className="desktop-text">Crafted by Harshith Reddy Nalla</span>
             <span className="mobile-text">Author</span>
           </a>
           <a 

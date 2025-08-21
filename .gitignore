@@ -3,9 +3,6 @@
 /.pnp
 .pnp.js
 
-# environment variables
-.env
-
 /coverage
 
 /build
