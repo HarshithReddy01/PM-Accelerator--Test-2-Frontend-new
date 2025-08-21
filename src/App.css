@@ -108,6 +108,14 @@ body {
   backdrop-filter: blur(5px);
 }
 
+.desktop-text {
+  display: inline;
+}
+
+.mobile-text {
+  display: none;
+}
+
 .pm-accelerator-link:hover {
   background: rgba(255, 255, 255, 0.9);
   color: #000000;
@@ -266,8 +274,16 @@ background: linear-gradient(180deg, rgba(148, 163, 184, 0.12) 0%, rgba(203, 213,
   }
   
   .pm-accelerator-link {
-    padding: 6px 12px;
-    font-size: 0.8rem;
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+  
+  .desktop-text {
+    display: none;
+  }
+  
+  .mobile-text {
+    display: inline;
   }
   
   .search-section {
@@ -311,6 +327,11 @@ background: linear-gradient(180deg, rgba(148, 163, 184, 0.12) 0%, rgba(203, 213,
   
   .welcome-message {
     padding: 24px 8px;
+  }
+  
+  .pm-accelerator-link {
+    padding: 3px 6px;
+    font-size: 0.65rem;
   }
 }
 
